@@ -1,7 +1,7 @@
-﻿using CineMax.Domain;
-using Cinemax.Persistence;
+﻿using Cinemax.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using CineMax.Domain.Entities;
 
 namespace Cinemax.WebApi
 {

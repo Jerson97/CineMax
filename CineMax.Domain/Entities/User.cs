@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace CineMax.Domain
+namespace CineMax.Domain.Entities
 {
     public class User : IdentityUser<int>
     {

@@ -1,7 +1,8 @@
 using Cinemax.Application;
 using Cinemax.Persistence;
 using Cinemax.WebApi;
-using CineMax.Domain;
+using Cinemax.WebApi.Middleware.ErrorMiddlewares;
+using CineMax.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -34,6 +35,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseMiddleware<ErrorHandlerMiddleware>();
 
 app.UseAuthorization();
 
