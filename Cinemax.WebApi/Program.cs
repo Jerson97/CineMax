@@ -1,3 +1,4 @@
+using Cinemax.Application;
 using Cinemax.Persistence;
 using Cinemax.WebApi;
 using CineMax.Domain;
@@ -7,6 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 //Configuracion de Persistence
 builder.Services.AddPersistence(builder.Configuration);
+builder.Services.AddApplication(builder.Configuration);
+
 
 builder.Services.AddIdentity<User, IdentityRole<int>>()
                 .AddEntityFrameworkStores<CineMaxDbContext>()
