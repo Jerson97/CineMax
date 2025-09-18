@@ -1,5 +1,5 @@
 ﻿using System;
-using CineMax.Domain;
+using CineMax.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

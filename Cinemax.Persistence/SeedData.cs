@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CineMax.Domain;
+using CineMax.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 
 namespace Cinemax.Persistence

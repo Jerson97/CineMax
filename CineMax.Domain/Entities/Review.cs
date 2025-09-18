@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CineMax.Domain
+namespace CineMax.Domain.Entities
 {
     public class Review
     {
