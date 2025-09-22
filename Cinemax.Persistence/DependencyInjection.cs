@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Cinemax.Application.Interfaces;
+using Cinemax.Persistence.Repositories;
 using CineMax.Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -16,7 +18,8 @@ namespace Cinemax.Persistence
             services.AddDbContext<CineMaxDbContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
-            
+            services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<CineMaxDbContext>());
+            services.AddScoped<IMovieRepository, MovieRepository>();
 
             return services;
         }

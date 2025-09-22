@@ -1,4 +1,5 @@
 ﻿using System;
+using Cinemax.Application.Interfaces;
 using CineMax.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -6,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cinemax.Persistence
 {
-    public class CineMaxDbContext: IdentityDbContext<User, IdentityRole<int>, int>
+    public class CineMaxDbContext: IdentityDbContext<User, IdentityRole<int>, int>, IApplicationDbContext
     {
         public CineMaxDbContext (DbContextOptions<CineMaxDbContext> options) : base(options) { }
 
