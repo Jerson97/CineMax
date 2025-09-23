@@ -16,7 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Elementos de la solución",
 		global.json = global.json
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CineMaxTest", "CineMaxText\CineMaxTest.csproj", "{917BCD58-F395-421C-8578-ED3845C8AF56}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CineMaxTest", "CineMaxTest\CineMaxTest.csproj", "{917BCD58-F395-421C-8578-ED3845C8AF56}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
