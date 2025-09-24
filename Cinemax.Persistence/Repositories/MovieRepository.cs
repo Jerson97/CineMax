@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using Cinemax.Application.Common;
 using Cinemax.Application.DTOs;
+using Cinemax.Application.Features.Movies.Queries.GetAll;
 using Cinemax.Application.Interfaces;
 using CineMax.Domain.Entities;
 using CineMax.Domain.Enum;
@@ -23,6 +25,51 @@ namespace Cinemax.Persistence.Repositories
         {
             _context = context;
             _mapper = mapper;
+        }
+
+        public async Task<(ServiceStatus, DataCollection<MovieDto>?, string)> GetMovie(MovieQuery.MovieQueryRequest request, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var search = request.Search?.Trim().ToLower();
+
+                var page = Math.Max(1, request.Page);
+                var pageSize = Math.Max(1, request.Amount);
+
+                var skip = (page - 1) * pageSize;
+
+                //var total = await _context.Movies.CountAsync(cancellationToken);
+
+                var query = _context.Movies
+                    .Include(x => x.MovieCategories)
+                    .ThenInclude(x => x.Category)
+                    .Where(string.IsNullOrEmpty(search) ? x => true : x => x.Title!.ToLower().Contains(search));
+
+                var total = await query.CountAsync(cancellationToken);
+
+                var movies = await query
+                    .OrderBy(x => x.Title)
+                    .Skip(skip)
+                    .Take(pageSize)
+                    .ToListAsync(cancellationToken);
+
+                var movieDto = _mapper.Map<List<MovieDto>>(movies);
+
+                var movieDataCollection = new DataCollection<MovieDto>
+                {
+                    Items = movieDto,
+                    Total = total,
+                    Page = page,
+                    Pages = (int)Math.Ceiling((double)total / pageSize)
+                };
+
+                return (ServiceStatus.Ok, movieDataCollection, "Película obtenida exitosamente");
+            }
+            catch (Exception ex)
+            {
+                return (ServiceStatus.InternalError, null,
+                    $"Error al Consultar -> {ex.InnerException?.Message ?? ex.Message}");
+            }
         }
 
         public async Task<(ServiceStatus, int?, string)> InsertMovie(MovieCreateRequest request, CancellationToken cancellationToken)

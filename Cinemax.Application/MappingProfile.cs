@@ -10,12 +10,9 @@ namespace Cinemax.Application
         public MappingProfile() 
         {
             CreateMap<MovieCreateRequest, Movie>();
-
             CreateMap<Movie, MovieDto>()
-            .ForMember(dest => dest.CategoryList, opt =>
-            opt.MapFrom(src => src.MovieCategories.Select(mc => mc.CategoryId).ToList()));
-
-
+                .ForMember(x => x.CategoryList, y => y.MapFrom(z => z.MovieCategories.Select(a => a.Category).ToList()));
+            CreateMap<Category, CategoryDto>();
 
         }
     }
