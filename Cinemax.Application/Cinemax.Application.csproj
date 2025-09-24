@@ -19,8 +19,4 @@
     <ProjectReference Include="..\CineMax.Domain\CineMax.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\Movies\Queries\" />
-  </ItemGroup>
-
 </Project>
