@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Cinemax.Application.Common;
 using Cinemax.Application.DTOs;
+using Cinemax.Application.Features.Movies.Commands.Update;
 using Cinemax.Application.Features.Movies.Queries.GetAll;
 using Cinemax.Application.Interfaces;
 using CineMax.Domain.Entities;
@@ -13,6 +14,7 @@ using CineMax.Domain.Enum;
 using CineMax.Domain.Result;
 using Microsoft.EntityFrameworkCore;
 using static Cinemax.Application.Features.Movies.Commands.Create.MovieCreate;
+using static Cinemax.Application.Features.Movies.Commands.Update.MovieUpdate;
 
 namespace Cinemax.Persistence.Repositories
 {
@@ -81,14 +83,18 @@ namespace Cinemax.Persistence.Repositories
                 if (request.CategoryIds?.Any() == true)
                 {
                     movie.MovieCategories = request.CategoryIds
-                        .Select(catId => new MovieCategory { CategoryId = catId, Movie = movie })
+                        .Select(catId => new MovieCategory 
+                        { 
+                            CategoryId = catId, 
+                            Movie = movie 
+                        })
                         .ToList();
                 }
 
                 await _context.Movies.AddAsync(movie, cancellationToken);
                 await _context.SaveChangesAsync(cancellationToken);
 
-                return (ServiceStatus.Ok, movie.Id, "Película creada exitosamente");
+                return (ServiceStatus.Ok, movie.Id, "Película creada exitosamente");    
             }
             catch (Exception ex)
             {
@@ -96,7 +102,53 @@ namespace Cinemax.Persistence.Repositories
             }
         }
 
+        public async Task<(ServiceStatus, int?, string)> UpdateMovie(MovieUpdateRequest request, CancellationToken cancellationToken)
+        {
+            try
+            {
+                if (request == null || request.Id <= 0)
+                {
+                    return (ServiceStatus.FailedValidation, null, "Solicitud inválida");
+                }
 
+                var movie = await _context.Movies
+                    .Include(m => m.MovieCategories)
+                    .FirstOrDefaultAsync(m => m.Id == request.Id, cancellationToken);
+
+                if (movie == null)
+                {
+                    return (ServiceStatus.NotFound, null, "Película no encontrada");
+                }           
+
+                // Actualizar propiedades
+                movie.Title = request.Title ?? movie.Title;
+                movie.Description = request.Description ?? movie.Description;
+                movie.ReleaseDate = request.ReleaseDate != default ? request.ReleaseDate : movie.ReleaseDate;
+                movie.Duration = request.Duration > 0 ? request.Duration : movie.Duration;
+
+                // Actualizar categorías
+                if (request.CategoryIds != null && request.CategoryIds.Any())
+                {
+                    _context.MovieCategories.RemoveRange(movie.MovieCategories);
+
+                    movie.MovieCategories = request.CategoryIds
+                        .Select(catId => new MovieCategory
+                        {
+                            CategoryId = catId,
+                            MovieId = movie.Id
+                        })
+                        .ToList();
+                }
+
+                await _context.SaveChangesAsync(cancellationToken);
+
+                return (ServiceStatus.Ok, movie.Id, "Película actualizada exitosamente");
+            }
+            catch (Exception ex)
+            {
+                return (ServiceStatus.InternalError, null, $"Error al actualizar película: {ex.Message}");
+            }
+        }
 
     }
 }
