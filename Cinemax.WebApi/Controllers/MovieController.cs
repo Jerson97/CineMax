@@ -29,10 +29,11 @@ namespace Cinemax.WebApi.Controllers
             return await Mediator.Send(request);
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
         [ProducesResponseType(typeof(MessageResult<int>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<MessageResult<int>>> Update([FromBody] MovieUpdateRequest request)
+        public async Task<ActionResult<MessageResult<int>>> Update(int id, [FromBody] MovieUpdateRequest request)
         {
+            request.Id = id;
             return await Mediator.Send(request);
         }
     }

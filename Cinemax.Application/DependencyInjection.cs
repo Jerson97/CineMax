@@ -1,5 +1,7 @@
 ﻿using System.Reflection;
 using Cinemax.Application.Behaviors;
+using Cinemax.Application.Features.Movies.Commands.Create;
+using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,6 +16,9 @@ namespace Cinemax.Application
             {
                 cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
             });
+
+            services.AddValidatorsFromAssemblies(new[] { typeof(MovieCreateValidation).Assembly });
+
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviors<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
             services.AddAutoMapper(typeof(MappingProfile));
