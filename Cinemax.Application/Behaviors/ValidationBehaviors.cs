@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using CineMax.Domain.Result;
+using FluentValidation;
 using MediatR;
 
 namespace Cinemax.Application.Behaviors
@@ -30,7 +31,20 @@ namespace Cinemax.Application.Behaviors
 
                 if (failures.Count != 0)
                 {
-                    throw new ValidationException(failures);
+                    var firstError = failures.First().ErrorMessage;
+
+                    var type = typeof(TResponse);
+
+                    if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(MessageResult<>))
+                    {
+                        var errorResult = type
+                            .GetMethod("Fail")?
+                            .Invoke(null, new object[] { firstError });
+
+                        return (TResponse)errorResult!;
+                    }
+
+                    throw new ValidationException(firstError);
                 }
             }
 

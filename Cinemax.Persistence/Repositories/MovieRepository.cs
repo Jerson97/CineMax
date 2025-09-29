@@ -106,11 +106,6 @@ namespace Cinemax.Persistence.Repositories
         {
             try
             {
-                if (request == null || request.Id <= 0)
-                {
-                    return (ServiceStatus.FailedValidation, null, "Solicitud inválida");
-                }
-
                 var movie = await _context.Movies
                     .Include(m => m.MovieCategories)
                     .FirstOrDefaultAsync(m => m.Id == request.Id, cancellationToken);
@@ -120,13 +115,11 @@ namespace Cinemax.Persistence.Repositories
                     return (ServiceStatus.NotFound, null, "Película no encontrada");
                 }           
 
-                // Actualizar propiedades
                 movie.Title = request.Title ?? movie.Title;
                 movie.Description = request.Description ?? movie.Description;
                 movie.ReleaseDate = request.ReleaseDate != default ? request.ReleaseDate : movie.ReleaseDate;
                 movie.Duration = request.Duration > 0 ? request.Duration : movie.Duration;
 
-                // Actualizar categorías
                 if (request.CategoryIds != null && request.CategoryIds.Any())
                 {
                     _context.MovieCategories.RemoveRange(movie.MovieCategories);
