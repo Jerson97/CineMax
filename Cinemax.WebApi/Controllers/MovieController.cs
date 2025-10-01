@@ -5,6 +5,7 @@ using Cinemax.Application.Features.Movies.Queries.GetAll;
 using CineMax.Domain.Result;
 using Microsoft.AspNetCore.Mvc;
 using static Cinemax.Application.Features.Movies.Commands.Create.MovieCreate;
+using static Cinemax.Application.Features.Movies.Commands.Delete.MovieDelete;
 using static Cinemax.Application.Features.Movies.Commands.Update.MovieUpdate;
 using static Cinemax.Application.Features.Movies.Queries.GetAll.MovieQuery;
 
@@ -36,5 +37,13 @@ namespace Cinemax.WebApi.Controllers
             request.Id = id;
             return await Mediator.Send(request);
         }
+
+        [HttpDelete("{id}")]
+        [ProducesResponseType(typeof(MessageResult<int>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<MessageResult<int>>> Delete(int id)
+        {
+            return await Mediator.Send(new MovieDeleteRequest { Id = id });
+        }
+
     }
-}
+}   

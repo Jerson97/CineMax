@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
 using Cinemax.Application.Interfaces;
@@ -12,32 +11,26 @@ using CineMax.Domain.Models;
 using CineMax.Domain.Result;
 using MediatR;
 
-namespace Cinemax.Application.Features.Movies.Commands.Update
+namespace Cinemax.Application.Features.Movies.Commands.Delete
 {
-    public class MovieUpdate
+    public class MovieDelete
     {
-        public class MovieUpdateRequest : IRequest<MessageResult<int>>
+        public class MovieDeleteRequest : IRequest<MessageResult<int>>
         {
-            [JsonIgnore]
             public int Id { get; set; }
-            public string? Title { get; set; }
-            public string? Description { get; set; }
-            public DateTime ReleaseDate { get; set; }
-            public List<int> CategoryIds { get; set; } = new();
-            public int Duration { get; set; }
         }
 
-        public class Manejador : IRequestHandler<MovieUpdateRequest, MessageResult<int>>
+        public class Manejador : IRequestHandler<MovieDeleteRequest, MessageResult<int>>
         {
             private readonly IMovieRepository _movieRepository;
 
-            public Manejador(IMovieRepository movieRepository)
+            public Manejador(IMapper mapper, IMovieRepository movieRepository)
             {
                 _movieRepository = movieRepository;
             }
-            public async Task<MessageResult<int>> Handle(MovieUpdateRequest request, CancellationToken cancellationToken)
+            public async Task<MessageResult<int>> Handle(MovieDeleteRequest request, CancellationToken cancellationToken)
             {
-                var (status, movieId, message) = await _movieRepository.UpdateMovie(request, cancellationToken);
+                var (status, movieId, message) = await _movieRepository.DeleteMovie(request, cancellationToken);
 
                 if (status != ServiceStatus.Ok)
                     throw new ErrorHandler(

@@ -24,15 +24,11 @@ namespace Cinemax.Application.Features.Movies.Commands.Create
 
         public class Manejador : IRequestHandler<MovieCreateRequest, MessageResult<int>>
         {
-            private readonly IApplicationDbContext _context;
             private readonly IMovieRepository _movieRepository;
-            private readonly IMapper _mapper;
 
-            public Manejador(IApplicationDbContext context, IMapper mapper, IMovieRepository movieRepository)     
+            public Manejador(IMovieRepository movieRepository)     
             {
-                _context = context;
                 _movieRepository = movieRepository;
-                _mapper = mapper;
             }
 
             public async Task<MessageResult<int>> Handle(MovieCreateRequest request, CancellationToken cancellationToken)

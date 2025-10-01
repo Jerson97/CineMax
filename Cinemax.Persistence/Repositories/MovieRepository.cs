@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Cinemax.Application.Common;
 using Cinemax.Application.DTOs;
+using Cinemax.Application.Features.Movies.Commands.Delete;
 using Cinemax.Application.Features.Movies.Commands.Update;
 using Cinemax.Application.Features.Movies.Queries.GetAll;
 using Cinemax.Application.Interfaces;
@@ -14,6 +15,7 @@ using CineMax.Domain.Enum;
 using CineMax.Domain.Result;
 using Microsoft.EntityFrameworkCore;
 using static Cinemax.Application.Features.Movies.Commands.Create.MovieCreate;
+using static Cinemax.Application.Features.Movies.Commands.Delete.MovieDelete;
 using static Cinemax.Application.Features.Movies.Commands.Update.MovieUpdate;
 
 namespace Cinemax.Persistence.Repositories
@@ -27,6 +29,37 @@ namespace Cinemax.Persistence.Repositories
         {
             _context = context;
             _mapper = mapper;
+        }
+
+        public async Task<(ServiceStatus, int?, string)> DeleteMovie(MovieDeleteRequest request, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var movie = await _context.Movies.FirstOrDefaultAsync(m => m.Id == request.Id, cancellationToken);
+
+                if (movie == null)
+                {
+                    return (ServiceStatus.NotFound, null, "Película no encontrada");
+                }
+
+                if (!movie.IsActive)
+                {
+                    return (ServiceStatus.FailedValidation, movie.Id, "La película ya estaba inactiva");
+                }
+
+                movie.IsActive = false;
+
+                await _context.SaveChangesAsync(cancellationToken);
+
+                return (ServiceStatus.Ok, movie.Id, "Película se elimino");
+            }
+            catch (Exception ex)
+            {
+
+                return (ServiceStatus.InternalError, null, $"\"Error al eliminar película: {ex.Message}");
+            }
+            
+
         }
 
         public async Task<(ServiceStatus, DataCollection<MovieDto>?, string)> GetMovie(MovieQuery.MovieQueryRequest request, CancellationToken cancellationToken)
