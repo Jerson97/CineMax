@@ -2,6 +2,7 @@
 using Cinemax.Application.DTOs;
 using CineMax.Domain.Result;
 using Microsoft.AspNetCore.Mvc;
+using static Cinemax.Application.Features.Category.Queries.GetById.MovieDetailQuery;
 using static Cinemax.Application.Features.Movies.Commands.Create.MovieCreate;
 using static Cinemax.Application.Features.Movies.Commands.Delete.MovieDelete;
 using static Cinemax.Application.Features.Movies.Commands.Update.MovieUpdate;
@@ -19,7 +20,15 @@ namespace Cinemax.WebApi.Controllers
         {
             return await Mediator.Send(request);
         }
-    
+
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(MessageResult<DataCollection<MovieDto>>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<MessageResult<MovieDto>>> GetById(int id)
+        {
+
+            return await Mediator.Send(new MovieDetailQueryRequest { Id = id});
+        }
+
 
         [HttpPost]
         [ProducesResponseType(typeof(MessageResult<int>), StatusCodes.Status201Created)]

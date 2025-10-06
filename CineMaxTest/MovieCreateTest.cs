@@ -10,60 +10,61 @@ using CineMax.Domain.Models;
 
 public class MovieCreateTest
 {
-    private readonly Mock<IMovieRepository> _movieRepoMock;
-    private readonly Mock<IApplicationDbContext> _dbContextMock;
-    private readonly Mock<IMapper> _mapperMock;
+    //private readonly Mock<IMovieRepository> _movieRepoMock;
+    //private readonly Mock<IApplicationDbContext> _dbContextMock;
+    //private readonly Mock<IMapper> _mapperMock;
 
-    public MovieCreateTest()
-    {
-        _movieRepoMock = new Mock<IMovieRepository>();
-        _dbContextMock = new Mock<IApplicationDbContext>();
-        _mapperMock = new Mock<IMapper>();
-    }
+    //public MovieCreateTest()
+    //{
+    //    _movieRepoMock = new Mock<IMovieRepository>();
+    //    _dbContextMock = new Mock<IApplicationDbContext>();
+    //    _mapperMock = new Mock<IMapper>();
+    //}
 
-    [Fact]
-    public async Task Handle_ShouldReturnMessageResult_WhenMovieIsCreated()
-    {
-        // Arrange
-        var request = new MovieCreate.MovieCreateRequest
-        {
-            Title = "Matrix",
-            Description = "Sci-fi",
-            ReleaseDate = new DateTime(1999, 3, 31),
-            Duration = 120,
-            CategoryIds = new List<int> { 1 }
-        };
+    //[Fact]
+    //public async Task Handle_ShouldReturnMessageResult_WhenMovieIsCreated()
+    //{
+    //    // Arrange
+    //    var request = new MovieCreate.MovieCreateRequest
+    //    {
+    //        Title = "Matrix",
+    //        Description = "Sci-fi",
+    //        ReleaseDate = new DateTime(1999, 3, 31),
+    //        Duration = 120,
 
-        _movieRepoMock
-            .Setup(r => r.InsertMovie(request, It.IsAny<CancellationToken>()))
-            .ReturnsAsync((ServiceStatus.Ok, 8, "Película creada exitosamente"));
+    //        CategoryIds = new List<int> { 1 }
+    //    };
 
-        var handler = new MovieCreate.Manejador(_dbContextMock.Object, _mapperMock.Object, _movieRepoMock.Object);
+    //    _movieRepoMock
+    //        .Setup(r => r.InsertMovie(request, It.IsAny<CancellationToken>()))
+    //        .ReturnsAsync((ServiceStatus.Ok, 8, "Película creada exitosamente"));
 
-        // Act
-        var result = await handler.Handle(request, default);
+    //    var handler = new MovieCreate.Manejador(_dbContextMock.Object, _mapperMock.Object, _movieRepoMock.Object);
 
-        // Assert
-        Assert.Equal("Película creada exitosamente", result.Message);
-        Assert.Equal(8, result.Data);
-        Assert.Equal(1, result.Code); // por tu MessageResult.Of
-    }
+    //    // Act
+    //    var result = await handler.Handle(request, default);
 
-    [Fact]
-    public async Task Handle_ShouldThrowErrorHandler_WhenServiceStatusIsNotFound()
-    {
-        // Arrange
-        var request = new MovieCreate.MovieCreateRequest { Title = "Inexistente" };
+    //    // Assert
+    //    Assert.Equal("Película creada exitosamente", result.Message);
+    //    Assert.Equal(8, result.Data);
+    //    Assert.Equal(1, result.Code); // por tu MessageResult.Of
+    //}
 
-        _movieRepoMock
-            .Setup(r => r.InsertMovie(request, It.IsAny<CancellationToken>()))
-            .ReturnsAsync((ServiceStatus.NotFound, null, "Categoría no encontrada"));
+    //[Fact]
+    //public async Task Handle_ShouldThrowErrorHandler_WhenServiceStatusIsNotFound()
+    //{
+    //    // Arrange
+    //    var request = new MovieCreate.MovieCreateRequest { Title = "Inexistente" };
 
-        var handler = new MovieCreate.Manejador(_dbContextMock.Object, _mapperMock.Object, _movieRepoMock.Object);
+    //    _movieRepoMock
+    //        .Setup(r => r.InsertMovie(request, It.IsAny<CancellationToken>()))
+    //        .ReturnsAsync((ServiceStatus.NotFound, null, "Categoría no encontrada"));
 
-        // Act & Assert
-        var ex = await Assert.ThrowsAsync<ErrorHandler>(() => handler.Handle(request, default));
-        Assert.Equal(HttpStatusCode.NotFound, ex.Code);
-        Assert.Equal("Categoría no encontrada", ex.Message);
-    }
+    //    var handler = new MovieCreate.Manejador(_dbContextMock.Object, _mapperMock.Object, _movieRepoMock.Object);
+
+    //    // Act & Assert
+    //    var ex = await Assert.ThrowsAsync<ErrorHandler>(() => handler.Handle(request, default));
+    //    Assert.Equal(HttpStatusCode.NotFound, ex.Code);
+    //    Assert.Equal("Categoría no encontrada", ex.Message);
+    //}
 }

@@ -5,6 +5,7 @@ using Cinemax.Application.Interfaces;
 using CineMax.Domain.Entities;
 using CineMax.Domain.Enum;
 using Microsoft.EntityFrameworkCore;
+using static Cinemax.Application.Features.Category.Queries.GetById.MovieDetailQuery;
 using static Cinemax.Application.Features.Movies.Commands.Create.MovieCreate;
 using static Cinemax.Application.Features.Movies.Commands.Delete.MovieDelete;
 using static Cinemax.Application.Features.Movies.Commands.Update.MovieUpdate;
@@ -99,6 +100,33 @@ namespace Cinemax.Persistence.Repositories
             }
         }
 
+        public async Task<(ServiceStatus, MovieDto?, string)> GetMovieId(MovieDetailQueryRequest request, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var movie = await _context.Movies
+                    .Include(x => x.MovieCategories)
+                    .ThenInclude(x => x.Category)
+                    .FirstOrDefaultAsync(m => m.Id == request.Id, cancellationToken);
+
+                if (movie == null)
+                {
+                    return (ServiceStatus.NotFound, null, "Película no encontrada");
+                }
+
+                var movieDto = _mapper.Map<MovieDto>(movie);
+
+                return (ServiceStatus.Ok, movieDto, "Película obtenida exitosamente");
+
+            }
+            catch (Exception ex)
+            {
+
+                return (ServiceStatus.InternalError, null,
+                    $"Error al Consultar -> {ex.InnerException?.Message ?? ex.Message}");
+            }
+        }
+
         public async Task<(ServiceStatus, int?, string)> InsertMovie(MovieCreateRequest request, CancellationToken cancellationToken)
         {
             try
@@ -143,6 +171,8 @@ namespace Cinemax.Persistence.Repositories
                 movie.Title = request.Title ?? movie.Title;
                 movie.Description = request.Description ?? movie.Description;
                 movie.ReleaseDate = request.ReleaseDate != default ? request.ReleaseDate : movie.ReleaseDate;
+                movie.Actors = request.Actors ?? movie.Actors;
+                movie.Director = request.Director ?? movie.Director;
                 movie.Duration = request.Duration > 0 ? request.Duration : movie.Duration;
 
                 if (request.CategoryIds != null && request.CategoryIds.Any())
