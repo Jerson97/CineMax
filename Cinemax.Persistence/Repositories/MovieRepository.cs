@@ -17,6 +17,7 @@ using Microsoft.EntityFrameworkCore;
 using static Cinemax.Application.Features.Movies.Commands.Create.MovieCreate;
 using static Cinemax.Application.Features.Movies.Commands.Delete.MovieDelete;
 using static Cinemax.Application.Features.Movies.Commands.Update.MovieUpdate;
+using static Cinemax.Application.Features.Movies.Queries.GetAll.MovieQuery;
 
 namespace Cinemax.Persistence.Repositories
 {
@@ -62,7 +63,7 @@ namespace Cinemax.Persistence.Repositories
 
         }
 
-        public async Task<(ServiceStatus, DataCollection<MovieDto>?, string)> GetMovie(MovieQuery.MovieQueryRequest request, CancellationToken cancellationToken)
+        public async Task<(ServiceStatus, DataCollection<MovieDto>?, string)> GetMovie(MovieQueryRequest request, CancellationToken cancellationToken)
         {
             try
             {
