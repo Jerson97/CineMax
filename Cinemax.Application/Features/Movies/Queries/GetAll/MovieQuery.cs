@@ -27,14 +27,10 @@ namespace Cinemax.Application.Features.Movies.Queries.GetAll
 
         public class Manejador : IRequestHandler<MovieQueryRequest, MessageResult<DataCollection<MovieDto>>>
         {
-            private readonly IApplicationDbContext _context;
-            private readonly IMapper _mapper;
             private readonly IMovieRepository _movieRepository;
 
-            public Manejador(IApplicationDbContext context, IMapper mapper, IMovieRepository movieRepository)
+            public Manejador(IMovieRepository movieRepository)
             {
-                _context = context;
-                _mapper = mapper;
                 _movieRepository = movieRepository;
             }
 
