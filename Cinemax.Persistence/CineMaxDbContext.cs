@@ -1,5 +1,4 @@
-﻿using System;
-using Cinemax.Application.Interfaces;
+﻿using Cinemax.Application.Interfaces;
 using CineMax.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;

@@ -1,8 +1,5 @@
 ﻿using System.Net;
-using AutoMapper;
-using Cinemax.Application.DTOs;
 using Cinemax.Application.Interfaces;
-using CineMax.Domain.Entities;
 using CineMax.Domain.Enum;
 using CineMax.Domain.Models;
 using CineMax.Domain.Result;

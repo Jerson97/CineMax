@@ -1,13 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using Cinemax.Application.Common;
-using Cinemax.Application.DTOs;
+﻿using System.Net;
 using Cinemax.Application.Interfaces;
-using CineMax.Domain.Entities;
 using CineMax.Domain.Enum;
 using CineMax.Domain.Models;
 using CineMax.Domain.Result;

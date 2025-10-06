@@ -1,7 +1,5 @@
 ﻿using Cinemax.Application.Common;
 using Cinemax.Application.DTOs;
-using Cinemax.Application.Features.Movies.Commands.Create;
-using Cinemax.Application.Features.Movies.Queries.GetAll;
 using CineMax.Domain.Result;
 using Microsoft.AspNetCore.Mvc;
 using static Cinemax.Application.Features.Movies.Commands.Create.MovieCreate;
