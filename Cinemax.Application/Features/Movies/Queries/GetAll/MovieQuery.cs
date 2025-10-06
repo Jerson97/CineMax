@@ -1,18 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
-using Cinemax.Application.Common;
+﻿using Cinemax.Application.Common;
 using Cinemax.Application.DTOs;
 using Cinemax.Application.Interfaces;
-using CineMax.Domain.Entities;
 using CineMax.Domain.Enum;
 using CineMax.Domain.Models;
 using CineMax.Domain.Result;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace Cinemax.Application.Features.Movies.Queries.GetAll
 {

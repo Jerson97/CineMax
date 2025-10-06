@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CineMax.Domain.Entities;
+﻿using CineMax.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Cinemax.Application.Interfaces

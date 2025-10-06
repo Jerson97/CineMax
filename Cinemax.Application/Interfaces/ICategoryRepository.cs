@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cinemax.Application.Common;
+﻿using Cinemax.Application.Common;
 using Cinemax.Application.DTOs;
 using CineMax.Domain.Enum;
 using static Cinemax.Application.Features.Category.Command.Create.CategoryCreate;

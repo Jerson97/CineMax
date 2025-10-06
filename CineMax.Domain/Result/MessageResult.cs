@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace CineMax.Domain.Result
+﻿namespace CineMax.Domain.Result
 {
     public class MessageResult<T>
     {

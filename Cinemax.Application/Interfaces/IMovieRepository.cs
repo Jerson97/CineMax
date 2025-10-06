@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cinemax.Application.Common;
+﻿using Cinemax.Application.Common;
 using Cinemax.Application.DTOs;
-using Cinemax.Application.Features.Movies.Commands.Create;
-using CineMax.Domain.Entities;
 using CineMax.Domain.Enum;
-using CineMax.Domain.Result;
 using static Cinemax.Application.Features.Movies.Commands.Create.MovieCreate;
 using static Cinemax.Application.Features.Movies.Commands.Delete.MovieDelete;
 using static Cinemax.Application.Features.Movies.Commands.Update.MovieUpdate;

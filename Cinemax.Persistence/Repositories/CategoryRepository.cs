@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Cinemax.Application.Common;
 using Cinemax.Application.DTOs;
 using Cinemax.Application.Interfaces;
-using CineMax.Domain.Enum;
 using CineMax.Domain.Entities;
+using CineMax.Domain.Enum;
 using Microsoft.EntityFrameworkCore;
 using static Cinemax.Application.Features.Category.Command.Create.CategoryCreate;
 using static Cinemax.Application.Features.Category.Command.Delete.CategoryDelete;
@@ -113,7 +108,7 @@ namespace Cinemax.Persistence.Repositories
 
                 return (ServiceStatus.InternalError, null, $"Error al crear categoria: {ex.Message}");
             }
-            
+
         }
 
         public async Task<(ServiceStatus, int?, string)> UpdateCategory(CategoryUpdateRequest request, CancellationToken cancellationToken)
