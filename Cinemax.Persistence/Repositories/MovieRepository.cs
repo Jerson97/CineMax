@@ -71,6 +71,10 @@ namespace Cinemax.Persistence.Repositories
                 var query = _context.Movies
                     .Include(x => x.MovieCategories)
                     .ThenInclude(x => x.Category)
+                    .Include(x => x.MovieDirectors)
+                    .ThenInclude(x => x.Director)
+                    .Include(x => x.MovieActors)
+                    .ThenInclude(x => x.Actor)
                     .Where(string.IsNullOrEmpty(search) ? x => true : x => x.Title!.ToLower().Contains(search));
 
                 var total = await query.CountAsync(cancellationToken);
@@ -81,7 +85,7 @@ namespace Cinemax.Persistence.Repositories
                     .Take(pageSize)
                     .ToListAsync(cancellationToken);
 
-                var movieDto = _mapper.Map<List<MovieDto>>(movies);
+                 var movieDto = _mapper.Map<List<MovieDto>>(movies);
 
                 var movieDataCollection = new DataCollection<MovieDto>
                 {
@@ -171,8 +175,6 @@ namespace Cinemax.Persistence.Repositories
                 movie.Title = request.Title ?? movie.Title;
                 movie.Description = request.Description ?? movie.Description;
                 movie.ReleaseDate = request.ReleaseDate != default ? request.ReleaseDate : movie.ReleaseDate;
-                movie.Actors = request.Actors ?? movie.Actors;
-                movie.Director = request.Director ?? movie.Director;
                 movie.Duration = request.Duration > 0 ? request.Duration : movie.Duration;
 
                 if (request.CategoryIds != null && request.CategoryIds.Any())
