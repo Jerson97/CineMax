@@ -4,6 +4,7 @@ using Cinemax.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Cinemax.Persistence.Migrations
 {
     [DbContext(typeof(CineMaxDbContext))]
-    partial class CineMaxDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251006195831_AddRemoveDirectorActorss")]
+    partial class AddRemoveDirectorActorss
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,22 +24,6 @@ namespace Cinemax.Persistence.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("CineMax.Domain.Entities.Actor", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Actors");
-                });
 
             modelBuilder.Entity("CineMax.Domain.Entities.Category", b =>
                 {
@@ -55,22 +42,6 @@ namespace Cinemax.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
-                });
-
-            modelBuilder.Entity("CineMax.Domain.Entities.Director", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Directors");
                 });
 
             modelBuilder.Entity("CineMax.Domain.Entities.Favorite", b =>
@@ -129,21 +100,6 @@ namespace Cinemax.Persistence.Migrations
                     b.ToTable("Movies");
                 });
 
-            modelBuilder.Entity("CineMax.Domain.Entities.MovieActor", b =>
-                {
-                    b.Property<int>("MovieId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ActorId")
-                        .HasColumnType("int");
-
-                    b.HasKey("MovieId", "ActorId");
-
-                    b.HasIndex("ActorId");
-
-                    b.ToTable("MovieActor");
-                });
-
             modelBuilder.Entity("CineMax.Domain.Entities.MovieCategory", b =>
                 {
                     b.Property<int>("MovieId")
@@ -157,21 +113,6 @@ namespace Cinemax.Persistence.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("MovieCategories");
-                });
-
-            modelBuilder.Entity("CineMax.Domain.Entities.MovieDirector", b =>
-                {
-                    b.Property<int>("MovieId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("DirectorId")
-                        .HasColumnType("int");
-
-                    b.HasKey("MovieId", "DirectorId");
-
-                    b.HasIndex("DirectorId");
-
-                    b.ToTable("MovieDirectors");
                 });
 
             modelBuilder.Entity("CineMax.Domain.Entities.Review", b =>
@@ -239,21 +180,6 @@ namespace Cinemax.Persistence.Migrations
                     b.ToTable("Series");
                 });
 
-            modelBuilder.Entity("CineMax.Domain.Entities.SeriesActor", b =>
-                {
-                    b.Property<int>("SeriesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ActorId")
-                        .HasColumnType("int");
-
-                    b.HasKey("SeriesId", "ActorId");
-
-                    b.HasIndex("ActorId");
-
-                    b.ToTable("SeriesActor");
-                });
-
             modelBuilder.Entity("CineMax.Domain.Entities.SeriesCategory", b =>
                 {
                     b.Property<int>("SeriesId")
@@ -267,21 +193,6 @@ namespace Cinemax.Persistence.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("SeriesCategories");
-                });
-
-            modelBuilder.Entity("CineMax.Domain.Entities.SeriesDirector", b =>
-                {
-                    b.Property<int>("SeriesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("DirectorId")
-                        .HasColumnType("int");
-
-                    b.HasKey("SeriesId", "DirectorId");
-
-                    b.HasIndex("DirectorId");
-
-                    b.ToTable("SeriesDirectors");
                 });
 
             modelBuilder.Entity("CineMax.Domain.Entities.User", b =>
@@ -521,25 +432,6 @@ namespace Cinemax.Persistence.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("CineMax.Domain.Entities.MovieActor", b =>
-                {
-                    b.HasOne("CineMax.Domain.Entities.Actor", "Actor")
-                        .WithMany("Movies")
-                        .HasForeignKey("ActorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CineMax.Domain.Entities.Movie", "Movie")
-                        .WithMany("MovieActors")
-                        .HasForeignKey("MovieId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Actor");
-
-                    b.Navigation("Movie");
-                });
-
             modelBuilder.Entity("CineMax.Domain.Entities.MovieCategory", b =>
                 {
                     b.HasOne("CineMax.Domain.Entities.Category", "Category")
@@ -555,25 +447,6 @@ namespace Cinemax.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
-
-                    b.Navigation("Movie");
-                });
-
-            modelBuilder.Entity("CineMax.Domain.Entities.MovieDirector", b =>
-                {
-                    b.HasOne("CineMax.Domain.Entities.Director", "Director")
-                        .WithMany("Movies")
-                        .HasForeignKey("DirectorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CineMax.Domain.Entities.Movie", "Movie")
-                        .WithMany("MovieDirectors")
-                        .HasForeignKey("MovieId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Director");
 
                     b.Navigation("Movie");
                 });
@@ -605,25 +478,6 @@ namespace Cinemax.Persistence.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("CineMax.Domain.Entities.SeriesActor", b =>
-                {
-                    b.HasOne("CineMax.Domain.Entities.Actor", "Actor")
-                        .WithMany("Series")
-                        .HasForeignKey("ActorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CineMax.Domain.Entities.Series", "Series")
-                        .WithMany("SeriesActors")
-                        .HasForeignKey("SeriesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Actor");
-
-                    b.Navigation("Series");
-                });
-
             modelBuilder.Entity("CineMax.Domain.Entities.SeriesCategory", b =>
                 {
                     b.HasOne("CineMax.Domain.Entities.Category", "Category")
@@ -639,25 +493,6 @@ namespace Cinemax.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
-
-                    b.Navigation("Series");
-                });
-
-            modelBuilder.Entity("CineMax.Domain.Entities.SeriesDirector", b =>
-                {
-                    b.HasOne("CineMax.Domain.Entities.Director", "Director")
-                        .WithMany("Series")
-                        .HasForeignKey("DirectorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CineMax.Domain.Entities.Series", "Series")
-                        .WithMany("SeriesDirectors")
-                        .HasForeignKey("SeriesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Director");
 
                     b.Navigation("Series");
                 });
@@ -713,13 +548,6 @@ namespace Cinemax.Persistence.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("CineMax.Domain.Entities.Actor", b =>
-                {
-                    b.Navigation("Movies");
-
-                    b.Navigation("Series");
-                });
-
             modelBuilder.Entity("CineMax.Domain.Entities.Category", b =>
                 {
                     b.Navigation("MovieCategories");
@@ -727,22 +555,11 @@ namespace Cinemax.Persistence.Migrations
                     b.Navigation("SeriesCategories");
                 });
 
-            modelBuilder.Entity("CineMax.Domain.Entities.Director", b =>
-                {
-                    b.Navigation("Movies");
-
-                    b.Navigation("Series");
-                });
-
             modelBuilder.Entity("CineMax.Domain.Entities.Movie", b =>
                 {
                     b.Navigation("Favorites");
 
-                    b.Navigation("MovieActors");
-
                     b.Navigation("MovieCategories");
-
-                    b.Navigation("MovieDirectors");
 
                     b.Navigation("Reviews");
                 });
@@ -753,11 +570,7 @@ namespace Cinemax.Persistence.Migrations
 
                     b.Navigation("Reviews");
 
-                    b.Navigation("SeriesActors");
-
                     b.Navigation("SeriesCategories");
-
-                    b.Navigation("SeriesDirectors");
                 });
 
             modelBuilder.Entity("CineMax.Domain.Entities.User", b =>

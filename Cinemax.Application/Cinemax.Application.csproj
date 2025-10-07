@@ -20,4 +20,8 @@
     <ProjectReference Include="..\CineMax.Domain\CineMax.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\Series\" />
+  </ItemGroup>
+
 </Project>
