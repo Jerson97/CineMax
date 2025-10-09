@@ -12,6 +12,10 @@ namespace Cinemax.Application.Interfaces
         DbSet<Series> Series { get; set; }
         DbSet<MovieCategory> MovieCategories { get; set; }
         DbSet<SeriesCategory> SeriesCategories { get; set; }
+        DbSet<Actor> Actors { get; set; }
+        DbSet<Director> Directors { get; set; }
+        DbSet<MovieActor> MovieActor { get; set; }
+        DbSet<MovieDirector> MovieDirectors { get; set; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }

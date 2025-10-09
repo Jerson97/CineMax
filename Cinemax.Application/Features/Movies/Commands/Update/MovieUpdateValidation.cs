@@ -18,6 +18,12 @@ namespace Cinemax.Application.Features.Movies.Commands.Update
                 .WithMessage("La duración debe ser mayor a 0.");
             RuleFor(x => x.CategoryIds)
                 .Must(ids => ids.All(id => id > 0)).WithMessage("Todos los ID de categoría deben ser mayores que 0.");
+            RuleFor(x => x.DirectorIds)
+                .NotEmpty().WithMessage("Se requiere al menos un director")
+                .Must(ids => ids.All(id => id > 0)).WithMessage("Todos los ID de director deben ser mayores que 0.");
+            RuleFor(x => x.ActorIds)
+                .NotEmpty().WithMessage("Se requiere al menos un actor")
+                .Must(ids => ids.All(id => id > 0)).WithMessage("Todos los ID de actor deben ser mayores que 0.");
         }
     }
 }
