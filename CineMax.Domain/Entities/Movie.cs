@@ -12,7 +12,7 @@
         public ICollection<MovieCategory> MovieCategories { get; set; } = new List<MovieCategory>();
         public ICollection<Review> Reviews { get; set; } = new HashSet<Review>();
         public ICollection<Favorite> Favorites { get; set; } = new List<Favorite>();
-        public ICollection<MovieActor> MovieActors { get; set; } = new List<MovieActor>();
+        public ICollection<MovieActor> MovieActor { get; set; } = new List<MovieActor>();
         public ICollection<MovieDirector> MovieDirectors { get; set; } = new List<MovieDirector>();
     }
 }

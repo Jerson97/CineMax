@@ -73,8 +73,9 @@ namespace Cinemax.Persistence.Repositories
                     .ThenInclude(x => x.Category)
                     .Include(x => x.MovieDirectors)
                     .ThenInclude(x => x.Director)
-                    .Include(x => x.MovieActors)
+                    .Include(x => x.MovieActor)
                     .ThenInclude(x => x.Actor)
+                    .AsNoTracking()
                     .Where(string.IsNullOrEmpty(search) ? x => true : x => x.Title!.ToLower().Contains(search));
 
                 var total = await query.CountAsync(cancellationToken);
@@ -111,6 +112,11 @@ namespace Cinemax.Persistence.Repositories
                 var movie = await _context.Movies
                     .Include(x => x.MovieCategories)
                     .ThenInclude(x => x.Category)
+                    .Include(x => x.MovieDirectors)
+                    .ThenInclude(x => x.Director)
+                    .Include(x => x.MovieActor)
+                    .ThenInclude(x => x.Actor)
+                    .AsNoTracking()
                     .FirstOrDefaultAsync(m => m.Id == request.Id, cancellationToken);
 
                 if (movie == null)
@@ -137,16 +143,47 @@ namespace Cinemax.Persistence.Repositories
             {
                 var movie = _mapper.Map<Movie>(request);
 
-                if (request.CategoryIds?.Any() == true)
+                var validCategoryIds = await _context.Categories
+                    .Where(c => request.CategoryIds.Contains(c.Id))
+                    .Select(c => c.Id)
+                    .ToListAsync(cancellationToken);
+
+                if (validCategoryIds.Count != request.CategoryIds.Count)
                 {
-                    movie.MovieCategories = request.CategoryIds
-                        .Select(catId => new MovieCategory 
-                        { 
-                            CategoryId = catId, 
-                            Movie = movie 
-                        })
-                        .ToList();
+                    return (ServiceStatus.BadRequest, 0, "Una o más categorías no existen.");
                 }
+
+                var validDirectorIds = await _context.Directors
+                    .Where(d => request.DirectorIds.Contains(d.Id))
+                    .Select(d => d.Id)
+                    .ToListAsync(cancellationToken);
+
+                if (validDirectorIds.Count != request.DirectorIds.Count)
+                {
+                    return (ServiceStatus.BadRequest, 0, "Una o más directores no existen.");
+                }
+
+                var validActorIds = await _context.Actors
+                    .Where(a => request.ActorIds.Contains(a.Id))
+                    .Select(a => a.Id)
+                    .ToListAsync(cancellationToken);
+
+                if (validActorIds.Count != request.ActorIds.Count)
+                {
+                    return (ServiceStatus.BadRequest, 0, "Una o más actores no existen.");
+                }
+
+                    movie.MovieCategories = validCategoryIds
+                        .Select(catId => new MovieCategory { CategoryId = catId })
+                        .ToList();
+
+                    movie.MovieDirectors = validDirectorIds
+                        .Select(dirId => new MovieDirector { DirectorId = dirId })
+                        .ToList();
+
+                    movie.MovieActor = validActorIds
+                        .Select(actId => new MovieActor { ActorId = actId })
+                        .ToList();
 
                 await _context.Movies.AddAsync(movie, cancellationToken);
                 await _context.SaveChangesAsync(cancellationToken);
@@ -165,7 +202,10 @@ namespace Cinemax.Persistence.Repositories
             {
                 var movie = await _context.Movies
                     .Include(m => m.MovieCategories)
+                    .Include(m => m.MovieActor)
+                    .Include(m => m.MovieDirectors)  
                     .FirstOrDefaultAsync(m => m.Id == request.Id, cancellationToken);
+
 
                 if (movie == null)
                 {
@@ -177,20 +217,63 @@ namespace Cinemax.Persistence.Repositories
                 movie.ReleaseDate = request.ReleaseDate != default ? request.ReleaseDate : movie.ReleaseDate;
                 movie.Duration = request.Duration > 0 ? request.Duration : movie.Duration;
 
-                if (request.CategoryIds != null && request.CategoryIds.Any())
-                {
-                    _context.MovieCategories.RemoveRange(movie.MovieCategories);
+                var validCategoryIds = await _context.Categories
+                    .Where(c => request.CategoryIds.Contains(c.Id))
+                    .Select(c => c.Id)
+                    .ToListAsync(cancellationToken);
 
-                    movie.MovieCategories = request.CategoryIds
-                        .Select(catId => new MovieCategory
-                        {
-                            CategoryId = catId,
-                            MovieId = movie.Id
-                        })
-                        .ToList();
+
+                if (validCategoryIds.Count != request.CategoryIds.Count)
+                {
+                    return (ServiceStatus.BadRequest, null, "Una o más categorías no existen.");
                 }
 
+                var validDirectorIds = await _context.Directors
+                    .Where(d => request.DirectorIds.Contains(d.Id))
+                    .Select(d => d.Id)
+                    .ToListAsync(cancellationToken);
+
+                if (validDirectorIds.Count != request.DirectorIds.Count)
+                {
+                    return (ServiceStatus.BadRequest, null, "Una o más directores no existen.");
+                }
+
+                var validActorIds = await _context.Actors
+                    .Where(a => request.ActorIds.Contains(a.Id))
+                    .Select(a => a.Id)
+                    .ToListAsync(cancellationToken);
+
+                if (validActorIds.Count != request.ActorIds.Count)
+                {
+                    return (ServiceStatus.BadRequest, null, "Una o más actores no existen.");
+                }
+
+                // Actualizar
+                _context.MovieCategories.RemoveRange(movie.MovieCategories);
+                _context.MovieDirectors.RemoveRange(movie.MovieDirectors);
+                _context.MovieActor.RemoveRange(movie.MovieActor);
+
                 await _context.SaveChangesAsync(cancellationToken);
+
+                movie.MovieCategories.Clear();
+                movie.MovieDirectors.Clear();
+                movie.MovieActor.Clear();
+
+
+                movie.MovieCategories = validCategoryIds
+                    .Select(catId => new MovieCategory { CategoryId = catId, MovieId = movie.Id })
+                    .ToList();
+
+                movie.MovieDirectors = validDirectorIds
+                    .Select(dirId => new MovieDirector { DirectorId = dirId, MovieId = movie.Id })
+                    .ToList();
+
+                movie.MovieActor = validActorIds
+                    .Select(actId => new MovieActor { ActorId = actId, MovieId = movie.Id })
+                    .ToList();
+
+                await _context.SaveChangesAsync(cancellationToken);
+
 
                 return (ServiceStatus.Ok, movie.Id, "Película actualizada exitosamente");
             }
