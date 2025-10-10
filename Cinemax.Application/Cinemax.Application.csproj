@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Features\Category\Queries\GetById\" />
     <Folder Include="Features\Series\" />
   </ItemGroup>
 

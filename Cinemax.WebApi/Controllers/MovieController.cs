@@ -2,11 +2,12 @@
 using Cinemax.Application.DTOs;
 using CineMax.Domain.Result;
 using Microsoft.AspNetCore.Mvc;
-using static Cinemax.Application.Features.Category.Queries.GetById.MovieDetailQuery;
 using static Cinemax.Application.Features.Movies.Commands.Create.MovieCreate;
 using static Cinemax.Application.Features.Movies.Commands.Delete.MovieDelete;
 using static Cinemax.Application.Features.Movies.Commands.Update.MovieUpdate;
 using static Cinemax.Application.Features.Movies.Queries.GetAll.MovieQuery;
+using static Cinemax.Application.Features.Movies.Queries.GetById.MovieDetailQuery;
+using static Cinemax.Application.Features.Movies.Queries.MovieByCategory.MovieByCategory;
 
 namespace Cinemax.WebApi.Controllers
 {
@@ -22,11 +23,20 @@ namespace Cinemax.WebApi.Controllers
         }
 
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(MessageResult<DataCollection<MovieDto>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(MessageResult<MovieDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<MessageResult<MovieDto>>> GetById(int id)
         {
 
             return await Mediator.Send(new MovieDetailQueryRequest { Id = id});
+        }
+
+        [HttpGet("category/{id}")]
+        [ProducesResponseType(typeof(MessageResult<DataCollection<MovieDto>>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<MessageResult<DataCollection<MovieDto>>>> GeMovieByCategory(int id, [FromQuery] MovieByCategoryRequest request)
+        {
+            request.Id = id;
+            return await Mediator.Send(request);
+
         }
 
 
