@@ -5,11 +5,12 @@ using Cinemax.Application.Interfaces;
 using CineMax.Domain.Entities;
 using CineMax.Domain.Enum;
 using Microsoft.EntityFrameworkCore;
-using static Cinemax.Application.Features.Category.Queries.GetById.MovieDetailQuery;
 using static Cinemax.Application.Features.Movies.Commands.Create.MovieCreate;
 using static Cinemax.Application.Features.Movies.Commands.Delete.MovieDelete;
 using static Cinemax.Application.Features.Movies.Commands.Update.MovieUpdate;
 using static Cinemax.Application.Features.Movies.Queries.GetAll.MovieQuery;
+using static Cinemax.Application.Features.Movies.Queries.GetById.MovieDetailQuery;
+using static Cinemax.Application.Features.Movies.Queries.MovieByCategory.MovieByCategory;
 
 namespace Cinemax.Persistence.Repositories
 {
@@ -87,6 +88,62 @@ namespace Cinemax.Persistence.Repositories
                     .ToListAsync(cancellationToken);
 
                  var movieDto = _mapper.Map<List<MovieDto>>(movies);
+
+                var movieDataCollection = new DataCollection<MovieDto>
+                {
+                    Items = movieDto,
+                    Total = total,
+                    Page = page,
+                    Pages = (int)Math.Ceiling((double)total / pageSize)
+                };
+
+                return (ServiceStatus.Ok, movieDataCollection, "Película obtenida exitosamente");
+            }
+            catch (Exception ex)
+            {
+                return (ServiceStatus.InternalError, null,
+                    $"Error al Consultar -> {ex.InnerException?.Message ?? ex.Message}");
+            }
+        }
+
+        public async Task<(ServiceStatus, DataCollection<MovieDto>?, string)> GetMovieByCategory(MovieByCategoryRequest request, CancellationToken cancellationToken)
+        {
+            try
+            {
+
+                var validCategory = await _context.Categories
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken);
+
+                if (validCategory == null)
+                {
+                    return (ServiceStatus.NotFound, null, "Categoria no existe");
+                }
+
+                var page = Math.Max(1, request.Page);
+                var pageSize = Math.Max(1, request.Amount);
+
+                var skip = (page - 1) * pageSize;
+
+                var query = _context.Movies
+                    .Include(mc => mc.MovieCategories)
+                    .ThenInclude(c => c.Category)
+                    .Include(md => md.MovieDirectors)
+                    .ThenInclude(d => d.Director)
+                    .Include(ma => ma.MovieActor)
+                    .ThenInclude(a => a.Actor)
+                    .AsNoTracking()
+                    .Where(m => m.IsActive == true && m.MovieCategories.Any(c => c.CategoryId == request.Id));
+
+                var total = await query.CountAsync(cancellationToken);
+
+                var movies = await query
+                    .OrderBy(x => x.Title)
+                    .Skip(skip)
+                    .Take(pageSize)
+                    .ToListAsync(cancellationToken);
+
+                var movieDto = _mapper.Map<List<MovieDto>>(movies);
 
                 var movieDataCollection = new DataCollection<MovieDto>
                 {

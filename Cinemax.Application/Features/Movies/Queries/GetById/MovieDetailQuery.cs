@@ -5,13 +5,15 @@ using CineMax.Domain.Models;
 using CineMax.Domain.Result;
 using MediatR;
 
-namespace Cinemax.Application.Features.Category.Queries.GetById
+namespace Cinemax.Application.Features.Movies.Queries.GetById
 {
     public class MovieDetailQuery
     {
         public class MovieDetailQueryRequest : IRequest<MessageResult<MovieDto>>
         {
             public int Id { get; set; }
+            public int Page { get; set; } = 1;
+            public int Amount { get; set; } = 5;
         }
 
         public class Manejador : IRequestHandler<MovieDetailQueryRequest, MessageResult<MovieDto>>
