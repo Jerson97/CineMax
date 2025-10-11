@@ -16,6 +16,7 @@ namespace Cinemax.Persistence
             services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<CineMaxDbContext>());
             services.AddScoped<IMovieRepository, MovieRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IDirectoryRepository, DirectorRepository>();
 
             return services;
         }
