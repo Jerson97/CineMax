@@ -20,7 +20,6 @@ namespace Cinemax.Application
             services.AddValidatorsFromAssemblies(new[] { typeof(MovieCreateValidation).Assembly });
 
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviors<,>));
-            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(HeaderBehavior<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
             services.AddAutoMapper(typeof(MappingProfile));
             return services;
