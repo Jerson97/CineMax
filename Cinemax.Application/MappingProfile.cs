@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Cinemax.Application.DTOs;
 using CineMax.Domain.Entities;
+using static Cinemax.Application.Features.Actors.Command.Create.ActorCreate;
 using static Cinemax.Application.Features.Category.Command.Create.CategoryCreate;
 using static Cinemax.Application.Features.Directors.Command.Create.DirectorCreate;
 using static Cinemax.Application.Features.Movies.Commands.Create.MovieCreate;
@@ -21,6 +22,7 @@ namespace Cinemax.Application
             CreateMap<Director, DirectorDto>();
             CreateMap<Actor, ActorDto>();
             CreateMap<DirectorCreateRequest, Director>();
+            CreateMap<ActorCreateRequest, Actor>();
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Cinemax.Application.Common;
 using Cinemax.Application.DTOs;
-using Cinemax.Application.Features.Directors.Command.Update;
 using Cinemax.Application.Interfaces;
 using CineMax.Domain.Entities;
 using CineMax.Domain.Enum;

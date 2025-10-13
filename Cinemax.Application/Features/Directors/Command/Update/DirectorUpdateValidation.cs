@@ -8,9 +8,9 @@ using static Cinemax.Application.Features.Directors.Command.Update.DirectorUpdat
 
 namespace Cinemax.Application.Features.Directors.Command.Update
 {
-    public class DirectorUpdateValidate : AbstractValidator<DirectorUpdateRequest>
+    public class DirectorUpdateValidation : AbstractValidator<DirectorUpdateRequest>
     {
-        public DirectorUpdateValidate()
+        public DirectorUpdateValidation()
         {
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage("El nombre es obligatario.")

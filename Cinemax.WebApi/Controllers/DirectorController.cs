@@ -2,7 +2,6 @@
 using Cinemax.Application.DTOs;
 using CineMax.Domain.Result;
 using Microsoft.AspNetCore.Mvc;
-using static Cinemax.Application.Features.Category.Command.Update.CategoryUpdate;
 using static Cinemax.Application.Features.Directors.Command.Create.DirectorCreate;
 using static Cinemax.Application.Features.Directors.Command.Update.DirectorUpdate;
 using static Cinemax.Application.Features.Directors.Queries.GetAll.DirectorQuery;
