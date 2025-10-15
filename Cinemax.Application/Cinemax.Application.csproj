@@ -22,7 +22,10 @@
 
   <ItemGroup>
     <Folder Include="Features\Category\Queries\GetById\" />
-    <Folder Include="Features\Series\" />
+    <Folder Include="Features\Series\Commands\Delete\" />
+    <Folder Include="Features\Series\Commands\Update\" />
+    <Folder Include="Features\Series\Queries\GetById\" />
+    <Folder Include="Features\Series\Queries\SeriesByCategory\" />
   </ItemGroup>
 
 </Project>

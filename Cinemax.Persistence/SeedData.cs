@@ -69,7 +69,7 @@ namespace Cinemax.Persistence
                         Title = "Los SimpSon",
                         Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
                         ReleaseDate = new DateTime(2002, 04, 01),
-                        Season = 2
+                        //Season = 2
                     },
 
                     new Series
@@ -77,7 +77,7 @@ namespace Cinemax.Persistence
                         Title = "Mil oficios",
                         Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
                         ReleaseDate = new DateTime(1998, 10, 15),
-                        Season = 5
+                        //Season = 5
                     });
 
                 await context.SaveChangesAsync();
