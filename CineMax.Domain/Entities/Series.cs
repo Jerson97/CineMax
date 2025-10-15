@@ -6,7 +6,6 @@
         public string? Title { get; set; }
         public string? Description { get; set; }
         public DateTime ReleaseDate { get; set; }
-        public int Season { get; set; }
         public bool IsActive { get; set; } = true;
 
         public ICollection<SeriesCategory> SeriesCategories { get; set; } = new List<SeriesCategory>();
@@ -14,5 +13,6 @@
         public ICollection<Favorite> Favorites { get; set; } = new List<Favorite>();
         public ICollection<SeriesActor> SeriesActors { get; set; } = new List<SeriesActor>();
         public ICollection<SeriesDirector> SeriesDirectors { get; set; } = new List<SeriesDirector>();
+        public ICollection<Season> Seasons { get; set; } = new List<Season>();
     }
 }

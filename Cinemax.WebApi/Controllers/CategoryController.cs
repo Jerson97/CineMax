@@ -9,6 +9,8 @@ using static Cinemax.Application.Features.Category.Queries.GetAll.CategoryQuery;
 
 namespace Cinemax.WebApi.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class CategoryController : MyBaseController
     {
         [HttpGet]

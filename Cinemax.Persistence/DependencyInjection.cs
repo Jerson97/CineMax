@@ -18,6 +18,7 @@ namespace Cinemax.Persistence
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IDirectoryRepository, DirectorRepository>();
             services.AddScoped<IActorRepository, ActorRepository>();
+            services.AddScoped<ISeriesRepository, SeriesRepository>();
 
             return services;
         }
