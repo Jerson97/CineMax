@@ -4,6 +4,7 @@ using CineMax.Domain.Entities;
 using static Cinemax.Application.Features.Actors.Command.Create.ActorCreate;
 using static Cinemax.Application.Features.Category.Command.Create.CategoryCreate;
 using static Cinemax.Application.Features.Directors.Command.Create.DirectorCreate;
+using static Cinemax.Application.Features.Episodes.Command.Create.EpisodeCreate;
 using static Cinemax.Application.Features.Movies.Commands.Create.MovieCreate;
 using static Cinemax.Application.Features.Seasons.Command.Create.SeasonCreate;
 using static Cinemax.Application.Features.Series.Commands.Create.SeriesCreate;
@@ -26,6 +27,7 @@ namespace Cinemax.Application
                 .ForMember(x => x.DirectorList, y => y.MapFrom(z => z.SeriesDirectors.Select(a => a.Director).ToList()));
 
             CreateMap<SeasonCreateRequest, Season>();
+            CreateMap<EpisodeCreateRequest,  Episode>();
 
             CreateMap<Category, CategoryDto>();
             CreateMap<CategoryCreateRequest, Category>();
