@@ -20,15 +20,13 @@ namespace Cinemax.Persistence.Repositories
         {
             try
             {
-                var seriesExists = _context.Series.Any(s => s.Id == request.SeriesId);               
 
-                if (!seriesExists)
+                if (!_context.Series.Any(s => s.Id == request.SeriesId))
                 {
                     return (ServiceStatus.NotFound, null, "La serie no existe");
                 }
 
-                var seasonExists = _context.Seasons.Any(s => s.Number == request.Number && s.SeriesId == request.SeriesId);
-                if (seasonExists) 
+                if (_context.Seasons.Any(e => e.Number == request.Number && e.SeriesId == request.SeriesId))
                 {
                     return (ServiceStatus.BadRequest, null, "La temporada ya existe para esta serie");
                 }
