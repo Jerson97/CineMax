@@ -13,8 +13,8 @@ namespace Cinemax.Application.Features.Movies.Queries.MovieByCategory
         public class MovieByCategoryRequest : IRequest<MessageResult<DataCollection<MovieDto>>>
         {
             public int Id { get; set; }
-            public int Page { get; set; } = 1;
-            public int Amount { get; set; } = 5;
+            public int Page { get; set; }
+            public int Amount { get; set; }
         }
 
         public class Manejador : IRequestHandler<MovieByCategoryRequest, MessageResult<DataCollection<MovieDto>>>
