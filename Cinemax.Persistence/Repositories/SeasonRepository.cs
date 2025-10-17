@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
-using Cinemax.Application.Features.Seasons.Command.Create;
+﻿using AutoMapper;
 using Cinemax.Application.Interfaces;
 using CineMax.Domain.Entities;
 using CineMax.Domain.Enum;
