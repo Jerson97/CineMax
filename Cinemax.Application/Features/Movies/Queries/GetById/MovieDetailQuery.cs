@@ -12,8 +12,6 @@ namespace Cinemax.Application.Features.Movies.Queries.GetById
         public class MovieDetailQueryRequest : IRequest<MessageResult<MovieDto>>
         {
             public int Id { get; set; }
-            public int Page { get; set; } = 1;
-            public int Amount { get; set; } = 5;
         }
 
         public class Manejador : IRequestHandler<MovieDetailQueryRequest, MessageResult<MovieDto>>

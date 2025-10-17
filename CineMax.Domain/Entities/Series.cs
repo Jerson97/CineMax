@@ -11,7 +11,7 @@
         public ICollection<SeriesCategory> SeriesCategories { get; set; } = new List<SeriesCategory>();
         public ICollection<Review> Reviews { get; set; } = new List<Review>();
         public ICollection<Favorite> Favorites { get; set; } = new List<Favorite>();
-        public ICollection<SeriesActor> SeriesActors { get; set; } = new List<SeriesActor>();
+        public ICollection<SeriesActor> SeriesActor { get; set; } = new List<SeriesActor>();
         public ICollection<SeriesDirector> SeriesDirectors { get; set; } = new List<SeriesDirector>();
         public ICollection<Season> Seasons { get; set; } = new List<Season>();
     }

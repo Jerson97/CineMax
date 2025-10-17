@@ -32,6 +32,7 @@ namespace Cinemax.Persistence
         public DbSet<SeriesCategory> SeriesCategories { get; set; } = null!;
         public DbSet<MovieDirector> MovieDirectors { get; set; } = null!;
         public DbSet<SeriesDirector> SeriesDirectors { get; set; } = null!;
+        public DbSet<SeriesActor> SeriesActor { get; set; } = null!;
         public DbSet<MovieActor> MovieActor { get; set; }
         public DbSet<Season> Seasons { get; set; } = null!;
         public DbSet<Episode> Episodes { get; set; } = null!;

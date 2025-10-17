@@ -121,7 +121,7 @@ namespace Cinemax.Persistence.Repositories
                 }
 
                 var page = Math.Max(1, request.Page);
-                var pageSize = Math.Max(1, request.Amount);
+                var pageSize = Math.Max(5, request.Amount);
 
                 var skip = (page - 1) * pageSize;
 

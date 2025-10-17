@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FluentValidation;
+﻿using FluentValidation;
 using static Cinemax.Application.Features.Series.Commands.Create.SeriesCreate;
 
 namespace Cinemax.Application.Features.Series.Commands.Create
 {
-    public class SeriesValidation : AbstractValidator<SeriesCreateRequest>
+    public class SeriesCreateValidation : AbstractValidator<SeriesCreateRequest>
     {
-        public SeriesValidation()
+        public SeriesCreateValidation()
         {
             RuleFor(x => x.Title)
                 .NotEmpty().WithMessage("El titulo es obligatario.")
