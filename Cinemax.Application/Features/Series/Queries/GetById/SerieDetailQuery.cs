@@ -15,12 +15,12 @@ namespace Cinemax.Application.Features.Series.Queries.GetById
 {
     public class SerieDetailQuery
     {
-        public class SerieDetailQueryRequest : IRequest<MessageResult<SeriesDto>>
+        public class SerieDetailQueryRequest : IRequest<MessageResult<SerieByIdDto>>
         {
             public int Id { get; set; }
         }
 
-        public class Manejador : IRequestHandler<SerieDetailQueryRequest, MessageResult<SeriesDto>>
+        public class Manejador : IRequestHandler<SerieDetailQueryRequest, MessageResult<SerieByIdDto>>
         {
             private readonly ISeriesRepository _seriesRepository;
 
@@ -28,7 +28,7 @@ namespace Cinemax.Application.Features.Series.Queries.GetById
             {
                 _seriesRepository = seriesRepository;
             }
-            public async Task<MessageResult<SeriesDto>> Handle(SerieDetailQueryRequest request, CancellationToken cancellationToken)
+            public async Task<MessageResult<SerieByIdDto>> Handle(SerieDetailQueryRequest request, CancellationToken cancellationToken)
             {
                 var (status, result, message) = await _seriesRepository.GetSerieId(request, cancellationToken);
 
@@ -39,7 +39,7 @@ namespace Cinemax.Application.Features.Series.Queries.GetById
                             : System.Net.HttpStatusCode.InternalServerError,
                         message);
 
-                return MessageResult<SeriesDto>.Of(message, result);
+                return MessageResult<SerieByIdDto>.Of(message, result);
             }
         }
     }

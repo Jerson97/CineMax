@@ -111,7 +111,7 @@ namespace Cinemax.Persistence.Repositories
             }
         }
 
-        public async Task<(ServiceStatus, SeriesDto?, string)> GetSerieId(SerieDetailQueryRequest request, CancellationToken cancellationToken)
+        public async Task<(ServiceStatus, SerieByIdDto?, string)> GetSerieId(SerieDetailQueryRequest request, CancellationToken cancellationToken)
         {
             try
             {
@@ -122,6 +122,7 @@ namespace Cinemax.Persistence.Repositories
                     .ThenInclude(x => x.Director)
                     .Include(x => x.SeriesActor)
                     .ThenInclude(x => x.Actor)
+                    .Include(x => x.Seasons)
                     .AsNoTracking()
                     .FirstOrDefaultAsync(m => m.Id == request.Id, cancellationToken);
 
@@ -130,7 +131,7 @@ namespace Cinemax.Persistence.Repositories
                     return (ServiceStatus.NotFound, null, "Serie no encontrada");
                 }
 
-                var serieDto = _mapper.Map<SeriesDto>(serie);
+                var serieDto = _mapper.Map<SerieByIdDto>(serie);
 
                 return (ServiceStatus.Ok, serieDto, "Serie obtenida exitosamente");
 

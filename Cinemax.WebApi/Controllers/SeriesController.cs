@@ -23,8 +23,8 @@ namespace Cinemax.WebApi.Controllers
         }
 
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(MessageResult<SeriesDto>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<MessageResult<SeriesDto>>> GetById(int id)
+        [ProducesResponseType(typeof(MessageResult<SerieByIdDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<MessageResult<SerieByIdDto>>> GetById(int id)
         {
 
             return await Mediator.Send(new SerieDetailQueryRequest { Id = id });
