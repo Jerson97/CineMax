@@ -13,7 +13,7 @@ namespace Cinemax.Application.Interfaces
     public interface ISeriesRepository
     {
         Task<(ServiceStatus, DataCollection<SeriesDto>, string)> GetSeries(SeriesQueryRequest request, CancellationToken cancellationToken);
-        Task<(ServiceStatus, SeriesDto, string)> GetSerieId(SerieDetailQueryRequest request, CancellationToken cancellationToken);
+        Task<(ServiceStatus, SerieByIdDto, string)> GetSerieId(SerieDetailQueryRequest request, CancellationToken cancellationToken);
         Task<(ServiceStatus, DataCollection<SeriesDto>, string)> GetSerieByCategory(SerieByCategoryQueryRequest request, CancellationToken cancellationToken);
         Task<(ServiceStatus, int?, string)> InsertSeries(SeriesCreateRequest request, CancellationToken cancellationToken);
         Task<(ServiceStatus, int?, string)> UpdateSeries(SeriesUpdateRequest request, CancellationToken cancellationToken);

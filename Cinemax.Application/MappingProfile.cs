@@ -26,6 +26,12 @@ namespace Cinemax.Application
                 .ForMember(x => x.ActorList, y => y.MapFrom(z => z.SeriesActor.Select(a => a.Actor).ToList()))
                 .ForMember(x => x.DirectorList, y => y.MapFrom(z => z.SeriesDirectors.Select(a => a.Director).ToList()));
 
+            CreateMap<Series, SerieByIdDto>()
+                .ForMember(x => x.CategoryList, y => y.MapFrom(z => z.SeriesCategories.Select(a => a.Category).ToList()))
+                .ForMember(x => x.ActorList, y => y.MapFrom(z => z.SeriesActor.Select(a => a.Actor).ToList()))
+                .ForMember(x => x.DirectorList, y => y.MapFrom(z => z.SeriesDirectors.Select(a => a.Director).ToList()))
+                .ForMember(x => x.SeasonList, y => y.MapFrom(z => z.Seasons));
+
             CreateMap<SeasonCreateRequest, Season>();
             CreateMap<EpisodeCreateRequest,  Episode>();
 
@@ -35,8 +41,8 @@ namespace Cinemax.Application
             CreateMap<Actor, ActorDto>();
             CreateMap<DirectorCreateRequest, Director>();
             CreateMap<ActorCreateRequest, Actor>();
-
             CreateMap<SeriesCreateRequest, Series>();
+            CreateMap<Season, SeasonDto>();
         }
     }
 }
