@@ -22,7 +22,6 @@
 
   <ItemGroup>
     <Folder Include="Features\Category\Queries\GetById\" />
-    <Folder Include="Features\Seasons\Queries\" />
   </ItemGroup>
 
 </Project>

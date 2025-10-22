@@ -1,8 +1,12 @@
 ﻿using AutoMapper;
+using Cinemax.Application.Common;
+using Cinemax.Application.DTOs;
 using Cinemax.Application.Interfaces;
 using CineMax.Domain.Entities;
 using CineMax.Domain.Enum;
+using Microsoft.EntityFrameworkCore;
 using static Cinemax.Application.Features.Seasons.Command.Create.SeasonCreate;
+using static Cinemax.Application.Features.Seasons.Queries.EpisodeBySeason.EpisodeBySeasonQuery;
 
 namespace Cinemax.Persistence.Repositories
 {
@@ -16,6 +20,60 @@ namespace Cinemax.Persistence.Repositories
             _context = context;
             _mapper = mapper;
         }
+
+        public async Task<(ServiceStatus, DataCollection<EpisodeDto>?, string)> GetEpisodeBySeason(EpisodeBySeasonQueryRequest request, CancellationToken cancellationToken)
+        {
+            try
+            {                
+                var season = await _context.Seasons
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(m => m.Id == request.Id, cancellationToken);
+
+                if (season == null)
+                {
+                    return (ServiceStatus.NotFound, null, "Temporada no encontrada");
+                }
+
+                var page = Math.Max(1, request.Page);
+                var pageSize = request.Amount <= 0 ? 5
+                               : request.Amount > 50 ? 50
+                               : request.Amount;
+
+
+                var skip = (page - 1) * pageSize;
+
+                var query =  _context.Episodes
+                    .AsNoTracking()
+                    .Where(e => e.SeasonId == season.Id);
+
+
+                var total = await query.CountAsync(cancellationToken);
+
+                var episode = await query
+                    .OrderBy(e => e.Number)
+                    .Skip(skip)
+                    .Take(pageSize)
+                    .ToListAsync(cancellationToken);
+
+                var episodeDtos = _mapper.Map<List<EpisodeDto>>(episode);
+
+                var episodeDataCollection = new DataCollection<EpisodeDto>
+                {
+                    Items = episodeDtos,
+                    Total = total,
+                    Page = page,
+                    Pages = (int)Math.Ceiling((double)total / pageSize)
+                };
+
+                return (ServiceStatus.Ok, episodeDataCollection, "Episodios obtenidos exitosamente");
+            }
+            catch (Exception ex)
+            {
+                return (ServiceStatus.InternalError, null,
+                    $"Error al consultar -> {ex.InnerException?.Message ?? ex.Message}");
+            }
+        }
+
         public async Task<(ServiceStatus, int?, string)> InsertSeason(SeasonCreateRequest request, CancellationToken cancellationToken)
         {
             try
