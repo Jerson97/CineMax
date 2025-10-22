@@ -43,6 +43,7 @@ namespace Cinemax.Application
             CreateMap<ActorCreateRequest, Actor>();
             CreateMap<SeriesCreateRequest, Series>();
             CreateMap<Season, SeasonDto>();
+            CreateMap<Episode, EpisodeDto>();
         }
     }
 }
