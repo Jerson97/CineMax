@@ -70,7 +70,9 @@ namespace Cinemax.Persistence.Repositories
                 }
 
                 var page = Math.Max(1, request.Page);
-                var pageSize = Math.Max(1, request.Amount);
+                var pageSize = request.Amount <= 0 ? 5
+                               : request.Amount > 50 ? 50
+                               : request.Amount;
 
                 var skip = (page - 1) * pageSize;
 
@@ -151,7 +153,9 @@ namespace Cinemax.Persistence.Repositories
                 var search = request.Search?.Trim().ToLower();
 
                 var page = Math.Max(1, request.Page);
-                var pageSize = Math.Max(5, request.Amount);
+                var pageSize = request.Amount <= 0 ? 5
+                               : request.Amount > 50 ? 50
+                               : request.Amount;
 
                 var skip = (page - 1) * pageSize;
 

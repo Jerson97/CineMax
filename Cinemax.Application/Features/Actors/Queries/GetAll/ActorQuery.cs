@@ -13,8 +13,8 @@ namespace Cinemax.Application.Features.Actors.Queries.GetAll
     {
         public class ActorQueryRequest : IRequest<MessageResult<DataCollection<ActorDto>>>
         {
-            public int Page { get; set; } = 1;
-            public int Amount { get; set; } = 5;
+            public int Page { get; set; }
+            public int Amount { get; set; }
         }
     }
 
