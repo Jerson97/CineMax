@@ -4,7 +4,7 @@ using static Cinemax.Application.Features.Episodes.Command.Create.EpisodeCreate;
 
 namespace Cinemax.WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/episodes")]
     [ApiController]
     public class EpisodeController : MyBaseController
     {

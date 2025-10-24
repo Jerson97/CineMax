@@ -11,7 +11,7 @@ using static Cinemax.Application.Features.Series.Queries.SeriesByCategory.SerieB
 
 namespace Cinemax.WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/series")]
     [ApiController]
     public class SeriesController : MyBaseController
     {
@@ -30,9 +30,9 @@ namespace Cinemax.WebApi.Controllers
             return await Mediator.Send(new SerieDetailQueryRequest { Id = id });
         }
 
-        [HttpGet("category/{id}")]
+        [HttpGet("by-category/{id}")]
         [ProducesResponseType(typeof(MessageResult<DataCollection<SeriesDto>>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<MessageResult<DataCollection<SeriesDto>>>> GeMovieByCategory(int id, [FromQuery] SerieByCategoryQueryRequest request)
+        public async Task<ActionResult<MessageResult<DataCollection<SeriesDto>>>> GetSeriesByCategory(int id, [FromQuery] SerieByCategoryQueryRequest request)
         {
             request.Id = id;
             return await Mediator.Send(request);

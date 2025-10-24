@@ -9,7 +9,7 @@ using static Cinemax.Application.Features.Category.Queries.GetAll.CategoryQuery;
 
 namespace Cinemax.WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/categories")]
     [ApiController]
     public class CategoryController : MyBaseController
     {

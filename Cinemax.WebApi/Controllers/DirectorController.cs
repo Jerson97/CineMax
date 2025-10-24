@@ -8,7 +8,7 @@ using static Cinemax.Application.Features.Directors.Queries.GetAll.DirectorQuery
 
 namespace Cinemax.WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/directors")]
     [ApiController]
     public class DirectorController : MyBaseController
     {

@@ -7,13 +7,13 @@ using static Cinemax.Application.Features.Seasons.Queries.EpisodeBySeason.Episod
 
 namespace Cinemax.WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/seasons")]
     [ApiController]
     public class SeasonController : MyBaseController
     {
-        [HttpGet("{id}")]
+        [HttpGet("{id}/episodes")]
         [ProducesResponseType(typeof(MessageResult<DataCollection<EpisodeDto>>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<MessageResult<DataCollection<EpisodeDto>>>> GetById(int id)
+        public async Task<ActionResult<MessageResult<DataCollection<EpisodeDto>>>> GetEpisodeBySeason(int id)
         {
             return await Mediator.Send(new EpisodeBySeasonQueryRequest { Id = id });
         }
