@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cinemax.Application.Common;
+﻿using Cinemax.Application.Common;
 using Cinemax.Application.DTOs;
 using Cinemax.Application.Interfaces;
 using CineMax.Domain.Enum;
@@ -17,8 +12,8 @@ namespace Cinemax.Application.Features.Directors.Queries.GetAll
     {
         public class DirectorQueryRequest : IRequest<MessageResult<DataCollection<DirectorDto>>> 
         {
-            public int Page { get; set; } = 1;
-            public int Amount { get; set; } = 5;
+            public int Page { get; set; } 
+            public int Amount { get; set; } 
         }
 
         public class Manejador : IRequestHandler<DirectorQueryRequest, MessageResult<DataCollection<DirectorDto>>>
