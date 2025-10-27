@@ -45,12 +45,12 @@ namespace Cinemax.Persistence.Repositories
 
                 await _context.SaveChangesAsync(cancellationToken);
 
-                return (ServiceStatus.Ok, serie.Id, "Serie se elimino");
+                return (ServiceStatus.Ok, serie.Id, "Serie eliminada exitosamente");
             }
             catch (Exception ex)
             {
 
-                return (ServiceStatus.InternalError, null, $"\"Error al eliminar Serie: {ex.Message}");
+                return (ServiceStatus.InternalError, null, $"Error al eliminar Serie: {ex.Message}");
             }
 
         }
@@ -62,9 +62,9 @@ namespace Cinemax.Persistence.Repositories
 
                 var validCategory = await _context.Categories
                     .AsNoTracking()
-                    .FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken);
+                    .AnyAsync(c => c.Id == request.Id, cancellationToken);
 
-                if (validCategory == null)
+                if (!validCategory)
                 {
                     return (ServiceStatus.NotFound, null, "Categoria no existe");
                 }
@@ -88,15 +88,15 @@ namespace Cinemax.Persistence.Repositories
 
                 var total = await query.CountAsync(cancellationToken);
 
-                var serie = await query
+                var series = await query
                     .OrderBy(x => x.Title)
                     .Skip(skip)
                     .Take(pageSize)
                     .ToListAsync(cancellationToken);
 
-                var serieDto = _mapper.Map<List<SeriesDto>>(serie);
+                var serieDto = _mapper.Map<List<SeriesDto>>(series);
 
-                var movieDataCollection = new DataCollection<SeriesDto>
+                var serieDataCollection = new DataCollection<SeriesDto>
                 {
                     Items = serieDto,
                     Total = total,
@@ -104,7 +104,7 @@ namespace Cinemax.Persistence.Repositories
                     Pages = (int)Math.Ceiling((double)total / pageSize)
                 };
 
-                return (ServiceStatus.Ok, movieDataCollection, "Serie obtenida exitosamente");
+                return (ServiceStatus.Ok, serieDataCollection, "Serie obtenida exitosamente");
             }
             catch (Exception ex)
             {
@@ -118,13 +118,10 @@ namespace Cinemax.Persistence.Repositories
             try
             {
                 var serie = await _context.Series
-                    .Include(x => x.SeriesCategories)
-                    .ThenInclude(x => x.Category)
-                    .Include(x => x.SeriesDirectors)
-                    .ThenInclude(x => x.Director)
-                    .Include(x => x.SeriesActor)
-                    .ThenInclude(x => x.Actor)
                     .Include(x => x.Seasons)
+                    .Include(x => x.SeriesCategories).ThenInclude(x => x.Category)
+                    .Include(x => x.SeriesDirectors).ThenInclude(x => x.Director)
+                    .Include(x => x.SeriesActor).ThenInclude(x => x.Actor)
                     .AsNoTracking()
                     .FirstOrDefaultAsync(m => m.Id == request.Id, cancellationToken);
 
@@ -179,7 +176,7 @@ namespace Cinemax.Persistence.Repositories
 
                 var seriesDto = _mapper.Map<List<SeriesDto>>(series);
 
-                var movieDataCollection = new DataCollection<SeriesDto>
+                var seriesDataCollection = new DataCollection<SeriesDto>
                 {
                     Items = seriesDto,
                     Total = total,
@@ -187,7 +184,7 @@ namespace Cinemax.Persistence.Repositories
                     Pages = (int)Math.Ceiling((double)total / pageSize)
                 };
 
-                return (ServiceStatus.Ok, movieDataCollection, "Serie obtenida exitosamente");
+                return (ServiceStatus.Ok, seriesDataCollection, "Serie obtenida exitosamente");
             }
             catch (Exception ex)
             {
@@ -251,7 +248,7 @@ namespace Cinemax.Persistence.Repositories
             }
             catch (Exception ex)
             {
-                return (ServiceStatus.InternalError, 0, $"Error al crear película: {ex.Message}");
+                return (ServiceStatus.InternalError, 0, $"Error al crear serie: {ex.Message}");
             }
             
 
