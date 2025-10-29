@@ -196,17 +196,25 @@ namespace Cinemax.Persistence.Repositories
         {
             try
             {
+                // Subir nueva imagen si existe
                 string? imageUrl = null;
-
                 if (request.Image != null && request.Image.Length > 0)
                 {
                     try
                     {
                         imageUrl = await _blobStorageService.UploadAsync(request.Image, "images");
                     }
+                    catch (Azure.RequestFailedException ex)
+                    {
+                        // Errores específicos de Azure Storage
+                        Console.WriteLine($"❌ Error de Azure Storage: {ex.Message}");
+                        return (ServiceStatus.Error, null, "No se pudo conectar al servicio de Azure Storage. Verifique la cadena de conexión o la disponibilidad del servicio.");
+                    }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Error al subir imagen: {ex.Message}");
+                        // Otros errores (red, permisos, etc.)
+                        Console.WriteLine($"⚠️ Error inesperado al subir imagen: {ex.Message}");
+                        return (ServiceStatus.Error, null, "Error inesperado al subir la imagen. Inténtelo nuevamente.");
                     }
                 }
 
@@ -291,9 +299,17 @@ namespace Cinemax.Persistence.Repositories
                     {
                         imageUrl = await _blobStorageService.UploadAsync(request.Image, "images");
                     }
+                    catch (Azure.RequestFailedException ex)
+                    {
+                        // Errores específicos de Azure Storage
+                        Console.WriteLine($"❌ Error de Azure Storage: {ex.Message}");
+                        return (ServiceStatus.Error, null, "No se pudo conectar al servicio de Azure Storage. Verifique la cadena de conexión o la disponibilidad del servicio.");
+                    }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Error al subir imagen: {ex.Message}");
+                        // Otros errores (red, permisos, etc.)
+                        Console.WriteLine($"⚠️ Error inesperado al subir imagen: {ex.Message}");
+                        return (ServiceStatus.Error, null, "Error inesperado al subir la imagen. Inténtelo nuevamente.");
                     }
                 }
 
@@ -308,60 +324,61 @@ namespace Cinemax.Persistence.Repositories
                     movie.ImageUrl = imageUrl;
                 }
 
-                var validCategoryIds = await _context.Categories
+                if (request.CategoryIds.Count() > 0)
+                {
+                    var validCategoryIds = await _context.Categories
                     .Where(c => request.CategoryIds.Contains(c.Id))
                     .Select(c => c.Id)
                     .ToListAsync(cancellationToken);
 
+                    if (validCategoryIds.Count() > 0)
+                    {
+                        _context.MovieCategories.RemoveRange(movie.MovieCategories);
+                        movie.MovieCategories.Clear();
+                        movie.MovieCategories = validCategoryIds
+                        .Select(catId => new MovieCategory { CategoryId = catId, MovieId = movie.Id })
+                        .ToList();
+                    }
 
-                if (validCategoryIds.Count != request.CategoryIds.Count)
-                {
-                    return (ServiceStatus.BadRequest, null, "Una o más categorías no existen.");
                 }
 
-                var validDirectorIds = await _context.Directors
+                if (request.DirectorIds.Count() > 0)
+                {
+                    var validDirectorIds = await _context.Directors
                     .Where(d => request.DirectorIds.Contains(d.Id))
                     .Select(d => d.Id)
                     .ToListAsync(cancellationToken);
 
-                if (validDirectorIds.Count != request.DirectorIds.Count)
-                {
-                    return (ServiceStatus.BadRequest, null, "Una o más directores no existen.");
+                    if (validDirectorIds.Count() > 0)
+                    {
+                        _context.MovieDirectors.RemoveRange(movie.MovieDirectors);
+                        movie.MovieDirectors.Clear();
+
+                        movie.MovieDirectors = validDirectorIds
+                        .Select(dirId => new MovieDirector { DirectorId = dirId, MovieId = movie.Id })
+                        .ToList();
+                    }
                 }
 
-                var validActorIds = await _context.Actors
+
+                if (request.ActorIds.Count() > 0)
+                {
+                    var validActorIds = await _context.Actors
                     .Where(a => request.ActorIds.Contains(a.Id))
                     .Select(a => a.Id)
                     .ToListAsync(cancellationToken);
 
-                if (validActorIds.Count != request.ActorIds.Count)
-                {
-                    return (ServiceStatus.BadRequest, null, "Una o más actores no existen.");
+
+                    if (validActorIds.Count() > 0)
+                    {
+                        _context.MovieActor.RemoveRange(movie.MovieActor);
+                        movie.MovieActor.Clear();
+
+                        movie.MovieActor = validActorIds
+                        .Select(actId => new MovieActor { ActorId = actId, MovieId = movie.Id })
+                        .ToList();
+                    }
                 }
-
-                // Actualizar
-                _context.MovieCategories.RemoveRange(movie.MovieCategories);
-                _context.MovieDirectors.RemoveRange(movie.MovieDirectors);
-                _context.MovieActor.RemoveRange(movie.MovieActor);
-
-                await _context.SaveChangesAsync(cancellationToken);
-
-                movie.MovieCategories.Clear();
-                movie.MovieDirectors.Clear();
-                movie.MovieActor.Clear();
-
-
-                movie.MovieCategories = validCategoryIds
-                    .Select(catId => new MovieCategory { CategoryId = catId, MovieId = movie.Id })
-                    .ToList();
-
-                movie.MovieDirectors = validDirectorIds
-                    .Select(dirId => new MovieDirector { DirectorId = dirId, MovieId = movie.Id })
-                    .ToList();
-
-                movie.MovieActor = validActorIds
-                    .Select(actId => new MovieActor { ActorId = actId, MovieId = movie.Id })
-                    .ToList();
 
                 await _context.SaveChangesAsync(cancellationToken);
 

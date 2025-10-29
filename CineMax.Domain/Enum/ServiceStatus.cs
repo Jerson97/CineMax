@@ -12,6 +12,7 @@ namespace CineMax.Domain.Enum
         UnprocessableEntity = 422,
         NotFound = 404,
         NoContent = 204,
-        BadRequest = 400
+        BadRequest = 400,
+        Error = 520
     }
 }

@@ -192,17 +192,25 @@ namespace Cinemax.Persistence.Repositories
         {
             try
             {
+                // Subir nueva imagen si existe
                 string? imageUrl = null;
-
                 if (request.Image != null && request.Image.Length > 0)
                 {
                     try
                     {
                         imageUrl = await _blobStorageService.UploadAsync(request.Image, "images");
                     }
+                    catch (Azure.RequestFailedException ex)
+                    {
+                        // Errores específicos de Azure Storage
+                        Console.WriteLine($"❌ Error de Azure Storage: {ex.Message}");
+                        return (ServiceStatus.Error, null, "No se pudo conectar al servicio de Azure Storage. Verifique la cadena de conexión o la disponibilidad del servicio.");
+                    }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Error al subir imagen: {ex.Message}");
+                        // Otros errores (red, permisos, etc.)
+                        Console.WriteLine($"⚠️ Error inesperado al subir imagen: {ex.Message}");
+                        return (ServiceStatus.Error, null, "Error inesperado al subir la imagen. Inténtelo nuevamente.");
                     }
                 }
 
@@ -289,9 +297,17 @@ namespace Cinemax.Persistence.Repositories
                     {
                         imageUrl = await _blobStorageService.UploadAsync(request.Image, "images");
                     }
+                    catch (Azure.RequestFailedException ex)
+                    {
+                        // Errores específicos de Azure Storage
+                        Console.WriteLine($"❌ Error de Azure Storage: {ex.Message}");
+                        return (ServiceStatus.Error, null, "No se pudo conectar al servicio de Azure Storage. Verifique la cadena de conexión o la disponibilidad del servicio.");
+                    }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Error al subir imagen: {ex.Message}");
+                        // Otros errores (red, permisos, etc.)
+                        Console.WriteLine($"⚠️ Error inesperado al subir imagen: {ex.Message}");
+                        return (ServiceStatus.Error, null, "Error inesperado al subir la imagen. Inténtelo nuevamente.");
                     }
                 }
 
