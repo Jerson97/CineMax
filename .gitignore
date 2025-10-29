@@ -66,3 +66,10 @@ publish/
 
 #############################
 # Arc
+
+#############################
+# Archivos de configuración locales (no subir)
+#############################
+appsettings.Development.json
+appsettings.Local.json
+

@@ -1,5 +1,6 @@
 ﻿using Cinemax.Application.Interfaces;
 using Cinemax.Persistence.Repositories;
+using Cinemax.Persistence.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,6 +22,9 @@ namespace Cinemax.Persistence
             services.AddScoped<ISeriesRepository, SeriesRepository>();
             services.AddScoped<ISeasonRepository, SeasonRepository>();
             services.AddScoped<IEpisodeRepository, EpisodeRepository>();
+
+
+            services.AddScoped<IBlobStorageService, BlobStorageService>();
 
             return services;
         }

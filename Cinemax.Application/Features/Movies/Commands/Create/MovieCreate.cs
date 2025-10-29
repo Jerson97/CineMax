@@ -4,6 +4,7 @@ using CineMax.Domain.Enum;
 using CineMax.Domain.Models;
 using CineMax.Domain.Result;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 
 namespace Cinemax.Application.Features.Movies.Commands.Create
 {
@@ -17,6 +18,7 @@ namespace Cinemax.Application.Features.Movies.Commands.Create
             public List<int> CategoryIds { get; set; } = new();
             public List<int> DirectorIds { get; set; } = new();
             public List<int> ActorIds { get; set; } = new();
+            public IFormFile? Image { get; set; }
             public int Duration { get; set; }
 
         }

@@ -7,6 +7,7 @@
         public string? Description { get; set; }
         public DateTime ReleaseDate { get; set; }
         public bool IsActive { get; set; } = true;
+        public string? ImageUrl { get; set; }
 
         public ICollection<SeriesCategory> SeriesCategories { get; set; } = new List<SeriesCategory>();
         public ICollection<Review> Reviews { get; set; } = new List<Review>();

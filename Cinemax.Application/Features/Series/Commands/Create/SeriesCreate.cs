@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Net;
 using Cinemax.Application.Interfaces;
 using CineMax.Domain.Enum;
 using CineMax.Domain.Models;
 using CineMax.Domain.Result;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 
 namespace Cinemax.Application.Features.Series.Commands.Create
 {
@@ -22,7 +18,7 @@ namespace Cinemax.Application.Features.Series.Commands.Create
             public List<int> CategoryIds { get; set; } = new();
             public List<int> DirectorIds { get; set; } = new();
             public List<int> ActorIds { get; set; } = new();
-            //public List<int> SeasonIds { get; set; } = new();
+            public IFormFile? Image { get; set; }
             public int Duration { get; set; }
         }
 

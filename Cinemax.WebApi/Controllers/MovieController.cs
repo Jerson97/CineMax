@@ -23,8 +23,8 @@ namespace Cinemax.WebApi.Controllers
         }
 
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(MessageResult<MovieDto>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<MessageResult<MovieDto>>> GetById(int id)
+        [ProducesResponseType(typeof(MessageResult<MovieByIdDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<MessageResult<MovieByIdDto>>> GetById(int id)
         {
 
             return await Mediator.Send(new MovieDetailQueryRequest { Id = id});
@@ -42,14 +42,14 @@ namespace Cinemax.WebApi.Controllers
 
         [HttpPost]
         [ProducesResponseType(typeof(MessageResult<int>), StatusCodes.Status201Created)]
-        public async Task<ActionResult<MessageResult<int>>> Create([FromBody] MovieCreateRequest request)
+        public async Task<ActionResult<MessageResult<int>>> Create([FromForm] MovieCreateRequest request)
         {
             return await Mediator.Send(request);
         }
 
         [HttpPut("{id}")]
         [ProducesResponseType(typeof(MessageResult<int>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<MessageResult<int>>> Update(int id, [FromBody] MovieUpdateRequest request)
+        public async Task<ActionResult<MessageResult<int>>> Update(int id, [FromForm] MovieUpdateRequest request)
         {
             request.Id = id;
             return await Mediator.Send(request);

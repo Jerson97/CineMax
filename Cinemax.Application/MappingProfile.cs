@@ -16,15 +16,14 @@ namespace Cinemax.Application
         public MappingProfile() 
         {
             CreateMap<MovieCreateRequest, Movie>();
-            CreateMap<Movie, MovieDto>()
-                .ForMember(x => x.CategoryList, y => y.MapFrom(z => z.MovieCategories.Select(a => a.Category).ToList()))
-                .ForMember(x => x.ActorList, y => y.MapFrom(z => z.MovieActor.Select(a => a.Actor).ToList()))
-                .ForMember(x => x.DirectorList, y => y.MapFrom(z => z.MovieDirectors.Select(a => a.Director).ToList()));
+            CreateMap<Movie, MovieDto>();
 
-            CreateMap<Series, SeriesDto>()
-                .ForMember(x => x.CategoryList, y => y.MapFrom(z => z.SeriesCategories.Select(a => a.Category).ToList()))
-                .ForMember(x => x.ActorList, y => y.MapFrom(z => z.SeriesActor.Select(a => a.Actor).ToList()))
-                .ForMember(x => x.DirectorList, y => y.MapFrom(z => z.SeriesDirectors.Select(a => a.Director).ToList()));
+            CreateMap<Movie, MovieByIdDto>()
+            .ForMember(x => x.CategoryList, y => y.MapFrom(z => z.MovieCategories.Select(a => a.Category).ToList()))
+            .ForMember(x => x.ActorList, y => y.MapFrom(z => z.MovieActor.Select(a => a.Actor).ToList()))
+            .ForMember(x => x.DirectorList, y => y.MapFrom(z => z.MovieDirectors.Select(a => a.Director).ToList()));
+
+            CreateMap<Series, SeriesDto>();
 
             CreateMap<Series, SerieByIdDto>()
                 .ForMember(x => x.CategoryList, y => y.MapFrom(z => z.SeriesCategories.Select(a => a.Category).ToList()))

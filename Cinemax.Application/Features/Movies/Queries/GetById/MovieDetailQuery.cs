@@ -9,19 +9,19 @@ namespace Cinemax.Application.Features.Movies.Queries.GetById
 {
     public class MovieDetailQuery
     {
-        public class MovieDetailQueryRequest : IRequest<MessageResult<MovieDto>>
+        public class MovieDetailQueryRequest : IRequest<MessageResult<MovieByIdDto>>
         {
             public int Id { get; set; }
         }
 
-        public class Manejador : IRequestHandler<MovieDetailQueryRequest, MessageResult<MovieDto>>
+        public class Manejador : IRequestHandler<MovieDetailQueryRequest, MessageResult<MovieByIdDto>>
         {
             private readonly IMovieRepository _movieRepository;
             public Manejador(IMovieRepository movieRepository)
             {
                 _movieRepository = movieRepository;
             }
-            public async Task<MessageResult<MovieDto>> Handle(MovieDetailQueryRequest request, CancellationToken cancellationToken)
+            public async Task<MessageResult<MovieByIdDto>> Handle(MovieDetailQueryRequest request, CancellationToken cancellationToken)
             {
                 var (status, result, message) = await _movieRepository.GetMovieId(request, cancellationToken);
 
@@ -32,7 +32,7 @@ namespace Cinemax.Application.Features.Movies.Queries.GetById
                             : System.Net.HttpStatusCode.InternalServerError,
                         message);
 
-                return MessageResult<MovieDto>.Of(message, result);
+                return MessageResult<MovieByIdDto>.Of(message, result);
             }
         }
     }

@@ -18,11 +18,13 @@ namespace Cinemax.Persistence.Repositories
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
+        private readonly IBlobStorageService _blobStorageService;
 
-        public MovieRepository(IApplicationDbContext context, IMapper mapper)
+        public MovieRepository(IApplicationDbContext context, IMapper mapper, IBlobStorageService blobStorageService)
         {
             _context = context;
             _mapper = mapper;
+            _blobStorageService = blobStorageService;
         }
 
         public async Task<(ServiceStatus, int?, string)> DeleteMovie(MovieDeleteRequest request, CancellationToken cancellationToken)
@@ -69,15 +71,7 @@ namespace Cinemax.Persistence.Repositories
 
                 var skip = (page - 1) * pageSize;
 
-                //var total = await _context.Movies.CountAsync(cancellationToken);
-
                 var query = _context.Movies
-                    .Include(x => x.MovieCategories)
-                    .ThenInclude(x => x.Category)
-                    .Include(x => x.MovieDirectors)
-                    .ThenInclude(x => x.Director)
-                    .Include(x => x.MovieActor)
-                    .ThenInclude(x => x.Actor)
                     .AsNoTracking()
                     .Where(string.IsNullOrEmpty(search) ? x => true : x => x.Title!.ToLower().Contains(search));
 
@@ -166,7 +160,7 @@ namespace Cinemax.Persistence.Repositories
             }
         }
 
-        public async Task<(ServiceStatus, MovieDto?, string)> GetMovieId(MovieDetailQueryRequest request, CancellationToken cancellationToken)
+        public async Task<(ServiceStatus, MovieByIdDto?, string)> GetMovieId(MovieDetailQueryRequest request, CancellationToken cancellationToken)
         {
             try
             {
@@ -185,7 +179,7 @@ namespace Cinemax.Persistence.Repositories
                     return (ServiceStatus.NotFound, null, "Película no encontrada");
                 }
 
-                var movieDto = _mapper.Map<MovieDto>(movie);
+                var movieDto = _mapper.Map<MovieByIdDto>(movie);
 
                 return (ServiceStatus.Ok, movieDto, "Película obtenida exitosamente");
 
@@ -202,7 +196,23 @@ namespace Cinemax.Persistence.Repositories
         {
             try
             {
+                string? imageUrl = null;
+
+                if (request.Image != null && request.Image.Length > 0)
+                {
+                    try
+                    {
+                        imageUrl = await _blobStorageService.UploadAsync(request.Image, "images");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error al subir imagen: {ex.Message}");
+                    }
+                }
+
                 var movie = _mapper.Map<Movie>(request);
+
+                movie.ImageUrl = imageUrl;
 
                 var validCategoryIds = await _context.Categories
                     .Where(c => request.CategoryIds.Contains(c.Id))
@@ -271,12 +281,32 @@ namespace Cinemax.Persistence.Repositories
                 if (movie == null)
                 {
                     return (ServiceStatus.NotFound, null, "Película no encontrada");
-                }           
+                }
+
+                // Subir nueva imagen si existe
+                string? imageUrl = null;
+                if (request.Image != null && request.Image.Length > 0)
+                {
+                    try
+                    {
+                        imageUrl = await _blobStorageService.UploadAsync(request.Image, "images");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error al subir imagen: {ex.Message}");
+                    }
+                }
+
 
                 movie.Title = request.Title ?? movie.Title;
                 movie.Description = request.Description ?? movie.Description;
                 movie.ReleaseDate = request.ReleaseDate != default ? request.ReleaseDate : movie.ReleaseDate;
                 movie.Duration = request.Duration > 0 ? request.Duration : movie.Duration;
+
+                if (imageUrl != null)
+                {
+                    movie.ImageUrl = imageUrl;
+                }
 
                 var validCategoryIds = await _context.Categories
                     .Where(c => request.CategoryIds.Contains(c.Id))

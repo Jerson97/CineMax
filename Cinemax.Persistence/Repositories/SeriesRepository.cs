@@ -18,11 +18,12 @@ namespace Cinemax.Persistence.Repositories
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
-
-        public SeriesRepository(IApplicationDbContext context, IMapper mapper)
+        private readonly IBlobStorageService _blobStorageService;
+        public SeriesRepository(IApplicationDbContext context, IMapper mapper, IBlobStorageService blobStorageService)
         {
             _context = context;
             _mapper = mapper;
+            _blobStorageService = blobStorageService;
         }
 
         public async Task<(ServiceStatus, int?, string)> DeleteSeries(SeriesDeleteRequest request, CancellationToken cancellationToken)
@@ -157,12 +158,6 @@ namespace Cinemax.Persistence.Repositories
                 var skip = (page - 1) * pageSize;
 
                 var query = _context.Series
-                    .Include(x => x.SeriesCategories)
-                    .ThenInclude(x => x.Category)
-                    .Include(x => x.SeriesDirectors)
-                    .ThenInclude(x => x.Director)
-                    .Include(x => x.SeriesActor)
-                    .ThenInclude(x => x.Actor)
                     .AsNoTracking()
                     .Where(string.IsNullOrEmpty(search) ? x => true : x => x.Title!.ToLower().Contains(search));
 
@@ -197,7 +192,23 @@ namespace Cinemax.Persistence.Repositories
         {
             try
             {
+                string? imageUrl = null;
+
+                if (request.Image != null && request.Image.Length > 0)
+                {
+                    try
+                    {
+                        imageUrl = await _blobStorageService.UploadAsync(request.Image, "images");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error al subir imagen: {ex.Message}");
+                    }
+                }
+
                 var series = _mapper.Map<Series>(request);
+
+                series.ImageUrl = imageUrl;
 
                 var validCategoryIds = await _context.Categories
                     .Where(c => request.CategoryIds.Contains(c.Id))
@@ -270,11 +281,29 @@ namespace Cinemax.Persistence.Repositories
                     return (ServiceStatus.NotFound, null, "Serie no encontrada");
                 }
 
+                // Subir nueva imagen si existe
+                string? imageUrl = null;
+                if (request.Image != null && request.Image.Length > 0)
+                {
+                    try
+                    {
+                        imageUrl = await _blobStorageService.UploadAsync(request.Image, "images");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error al subir imagen: {ex.Message}");
+                    }
+                }
+
                 serie.Title = request.Title ?? serie.Title;
                 serie.Description = request.Description ?? serie.Description;
                 serie.ReleaseDate = request.ReleaseDate != default ? request.ReleaseDate : serie.ReleaseDate;
 
-                
+                if (imageUrl != null)
+                {
+                    serie.ImageUrl = imageUrl;
+                }
+
 
                 if (request.CategoryIds.Count() > 0)
                 {

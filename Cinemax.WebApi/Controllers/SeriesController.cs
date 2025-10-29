@@ -41,14 +41,14 @@ namespace Cinemax.WebApi.Controllers
 
         [HttpPost]
         [ProducesResponseType(typeof(MessageResult<int>), StatusCodes.Status201Created)]
-        public async Task<ActionResult<MessageResult<int>>> Create([FromBody] SeriesCreateRequest request)
+        public async Task<ActionResult<MessageResult<int>>> Create([FromForm] SeriesCreateRequest request)
         {
             return await Mediator.Send(request);
         }
 
         [HttpPut("{id}")]
         [ProducesResponseType(typeof(MessageResult<int>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<MessageResult<int>>> Update(int id, [FromBody] SeriesUpdateRequest request)
+        public async Task<ActionResult<MessageResult<int>>> Update(int id, [FromForm] SeriesUpdateRequest request)
         {
             request.Id = id;
             return await Mediator.Send(request);

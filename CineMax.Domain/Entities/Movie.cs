@@ -8,6 +8,7 @@
         public DateTime ReleaseDate { get; set; }
         public int Duration { get; set; }
         public bool IsActive { get; set; } = true;
+        public string? ImageUrl { get; set; }
 
         public ICollection<MovieCategory> MovieCategories { get; set; } = new List<MovieCategory>();
         public ICollection<Review> Reviews { get; set; } = new HashSet<Review>();

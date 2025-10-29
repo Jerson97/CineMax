@@ -14,7 +14,7 @@ namespace Cinemax.Application.Interfaces
     {
         //Task<(ServiceStatus, MovieDto?, string)> InsertMovie(MovieCreateRequest request, CancellationToken cancellationToken);
         Task<(ServiceStatus, DataCollection<MovieDto>, string)> GetMovie(MovieQueryRequest request, CancellationToken cancellationToken);
-        Task<(ServiceStatus, MovieDto, string)> GetMovieId(MovieDetailQueryRequest request, CancellationToken cancellationToken);
+        Task<(ServiceStatus, MovieByIdDto, string)> GetMovieId(MovieDetailQueryRequest request, CancellationToken cancellationToken);
         Task<(ServiceStatus, DataCollection<MovieDto>, string)> GetMovieByCategory(MovieByCategoryRequest request, CancellationToken cancellationToken);
         Task<(ServiceStatus, int?, string)> InsertMovie(MovieCreateRequest request, CancellationToken cancellationToken);
         Task<(ServiceStatus, int?, string)> UpdateMovie(MovieUpdateRequest request, CancellationToken cancellationToken);
