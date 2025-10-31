@@ -2,19 +2,14 @@ using Cinemax.Application;
 using Cinemax.Persistence;
 using Cinemax.WebApi;
 using Cinemax.WebApi.Middleware.ErrorMiddlewares;
-using CineMax.Domain.Entities;
-using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
 //Configuracion de Persistence
 builder.Services.AddPersistence(builder.Configuration);
 builder.Services.AddApplication(builder.Configuration);
+builder.Services.AddIdentityAndJwt(builder.Configuration);
 
-
-builder.Services.AddIdentity<User, IdentityRole<int>>()
-                .AddEntityFrameworkStores<CineMaxDbContext>()
-                .AddDefaultTokenProviders();
 
 // Add services to the container.
 
@@ -37,6 +32,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseMiddleware<ErrorHandlerMiddleware>();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

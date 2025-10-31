@@ -102,6 +102,8 @@ namespace Cinemax.Persistence
                 await context.SaveChangesAsync();
             }
 
+            context.ChangeTracker.Clear();
+
         }
     }
 }

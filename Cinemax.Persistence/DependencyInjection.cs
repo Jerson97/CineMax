@@ -1,5 +1,7 @@
 ﻿using Cinemax.Application.Interfaces;
+using Cinemax.Application.Interfaces.Token;
 using Cinemax.Persistence.Repositories;
+using Cinemax.Persistence.Repositories.Token;
 using Cinemax.Persistence.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -14,6 +16,7 @@ namespace Cinemax.Persistence
             services.AddDbContext<CineMaxDbContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddScoped<IJwtGenerator, JwtGenerator>();
             services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<CineMaxDbContext>());
             services.AddScoped<IMovieRepository, MovieRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
@@ -22,6 +25,7 @@ namespace Cinemax.Persistence
             services.AddScoped<ISeriesRepository, SeriesRepository>();
             services.AddScoped<ISeasonRepository, SeasonRepository>();
             services.AddScoped<IEpisodeRepository, EpisodeRepository>();
+            services.AddScoped<IRegisterRepository,  RegisterRepository>();
 
 
             services.AddScoped<IBlobStorageService, BlobStorageService>();
