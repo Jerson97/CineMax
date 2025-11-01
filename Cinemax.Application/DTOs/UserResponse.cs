@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Cinemax.Application.DTOs
 {
-    public class RegisterResponse
+    public class UserResponse
     {
         public string? Name { get; set; }
         public string? LastName { get; set; }

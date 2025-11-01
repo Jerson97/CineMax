@@ -25,7 +25,7 @@ namespace Cinemax.Persistence
             services.AddScoped<ISeriesRepository, SeriesRepository>();
             services.AddScoped<ISeasonRepository, SeasonRepository>();
             services.AddScoped<IEpisodeRepository, EpisodeRepository>();
-            services.AddScoped<IRegisterRepository,  RegisterRepository>();
+            services.AddScoped<IUserRepository,  UserRepository>();
 
 
             services.AddScoped<IBlobStorageService, BlobStorageService>();

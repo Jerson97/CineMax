@@ -1,4 +1,9 @@
-﻿using System.Net;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Text;
+using System.Threading.Tasks;
 using Cinemax.Application.DTOs;
 using Cinemax.Application.Interfaces;
 using CineMax.Domain.Enum;
@@ -8,18 +13,15 @@ using MediatR;
 
 namespace Cinemax.Application.Features.Auth.Command
 {
-    public class Register
+    public class Login
     {
-        public class RegisterRequest : IRequest<MessageResult<UserResponse>>
+        public class LoginRequest : IRequest<MessageResult<UserResponse>>
         {
-            public string? Name { get; set; }
-            public string? LastName { get; set; }
-            public string? UserName { get; set; }
             public string? Email { get; set; }
             public string? Password { get; set; }
         }
 
-        public class Manejador : IRequestHandler<RegisterRequest, MessageResult<UserResponse>>
+        public class Manejador : IRequestHandler<LoginRequest, MessageResult<UserResponse>>
         {
             private readonly IUserRepository _userRepository;
 
@@ -27,9 +29,9 @@ namespace Cinemax.Application.Features.Auth.Command
             {
                 _userRepository = userRepository;
             }
-            public async Task<MessageResult<UserResponse>> Handle(RegisterRequest request, CancellationToken cancellationToken)
+            public async Task<MessageResult<UserResponse>> Handle(LoginRequest request, CancellationToken cancellationToken)
             {
-                var (status, registerResponse, message) = await _userRepository.Register(request, cancellationToken);
+                var (status, loginResponse, message) = await _userRepository.Login(request, cancellationToken);
 
                 if (status != ServiceStatus.Ok)
                     throw new ErrorHandler(
@@ -38,7 +40,7 @@ namespace Cinemax.Application.Features.Auth.Command
                             : HttpStatusCode.InternalServerError,
                     message);
 
-                return MessageResult<UserResponse>.Of(message, registerResponse!);
+                return MessageResult<UserResponse>.Of(message, loginResponse!);
             }
         }
     }
