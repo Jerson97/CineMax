@@ -58,7 +58,7 @@ namespace Cinemax.Persistence.Repositories
                     Email = user.Email
                 };
 
-                return (ServiceStatus.Ok, response, "Inicio de sesión exitoso"); 
+                return (ServiceStatus.Ok, response, "Inicio de sesión exitoso");
             }
         }
 

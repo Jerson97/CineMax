@@ -1,6 +1,7 @@
 ﻿using Cinemax.Application.Common;
 using Cinemax.Application.DTOs;
 using CineMax.Domain.Result;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static Cinemax.Application.Features.Movies.Commands.Create.MovieCreate;
 using static Cinemax.Application.Features.Movies.Commands.Delete.MovieDelete;

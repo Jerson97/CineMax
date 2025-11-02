@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Security.Claims;
+using System.Text;
 using CineMax.Domain.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -13,8 +14,8 @@ namespace Cinemax.Persistence
         public static IServiceCollection AddIdentityAndJwt(
             this IServiceCollection services, IConfiguration configuration)
         {
-            // Configuración de Identity
-            services.AddIdentityCore<User>(options =>
+            // 🔐 Configuración completa de Identity (no Core)
+            services.AddIdentity<User, IdentityRole<int>>(options =>
             {
                 options.Password.RequireDigit = true;
                 options.Password.RequireLowercase = true;
@@ -22,13 +23,10 @@ namespace Cinemax.Persistence
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequiredLength = 6;
             })
-            .AddRoles<IdentityRole<int>>()
             .AddEntityFrameworkStores<CineMaxDbContext>()
-            .AddSignInManager<SignInManager<User>>()
             .AddDefaultTokenProviders();
 
-
-            // Configuración JWT
+            // ⚙️ Configuración JWT
             var jwtSection = configuration.GetSection("Jwt");
             var key = Encoding.UTF8.GetBytes(jwtSection["Key"]!);
 
@@ -37,28 +35,39 @@ namespace Cinemax.Persistence
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-            .AddJwtBearer(options =>
-            {
-                options.RequireHttpsMetadata = false;
-                options.SaveToken = true;
-                options.TokenValidationParameters = new TokenValidationParameters
+                .AddJwtBearer(options =>
                 {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = jwtSection["Issuer"],
-                    ValidAudience = jwtSection["Audience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ClockSkew = TimeSpan.Zero
-                };
+                    options.RequireHttpsMetadata = false;
+                    options.SaveToken = true;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = jwtSection["Issuer"],
+                        ValidAudience = jwtSection["Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(key),
+                        ClockSkew = TimeSpan.Zero,
+
+                        // ⚠️ Aquí está el cambio clave
+                        RoleClaimType = ClaimTypes.Role, // 👈 ahora usa el mismo tipo que JwtGenerator
+                        NameClaimType = ClaimTypes.Name
+                    };
+                });
+
+            // 🔄 Sincroniza los claim types con Identity
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.ClaimsIdentity.RoleClaimType = ClaimTypes.Role;
+                options.ClaimsIdentity.UserNameClaimType = ClaimTypes.Name;
             });
 
-            // Políticas de autorización opcionales
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy("AdminOnly", p => p.RequireRole("ADMIN"));
-            });
+            //// Políticas de autorización opcionales
+            //services.AddAuthorization(options =>
+            //{
+            //    options.AddPolicy("AdminOnly", p => p.RequireRole("ADMIN"));
+            //});
 
             return services;
         }

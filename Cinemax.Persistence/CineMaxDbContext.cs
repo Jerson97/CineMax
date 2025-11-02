@@ -19,7 +19,41 @@ namespace Cinemax.Persistence
             builder.Entity<SeriesDirector>().HasKey(ci => new { ci.SeriesId, ci.DirectorId });
             builder.Entity<MovieActor>().HasKey(ci => new { ci.MovieId, ci.ActorId });
             builder.Entity<SeriesActor>().HasKey(ci => new { ci.SeriesId, ci.ActorId });
+
+            builder.Entity<Favorite>()
+                 // Índice único para películas (un usuario no puede marcar la misma película dos veces)
+                .HasIndex(f => new { f.UserId, f.MovieId })
+                .IsUnique()
+                .HasFilter("[MovieId] IS NOT NULL");
+
+            builder.Entity<Favorite>()
+                // Índice único para series (un usuario no puede marcar la misma serie dos veces)
+                .HasIndex(f => new { f.UserId, f.SeriesId })
+                .IsUnique()
+                .HasFilter("[SeriesId] IS NOT NULL");
+
+            builder.Entity<Favorite>()
+                .HasOne(f => f.User)
+                .WithMany(u => u.Favorites)
+                .HasForeignKey(f => f.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<Favorite>()
+                .HasOne(f => f.Movie)
+                .WithMany(m => m.Favorites)
+                .HasForeignKey(f => f.MovieId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<Favorite>()
+                .HasOne(f => f.Series)
+                .WithMany(s => s.Favorites)
+                .HasForeignKey(f => f.SeriesId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.Cascade);
+
         }
+
 
         public DbSet<Movie> Movies { get; set; } = null!;
         public DbSet<Category> Categories { get; set; } = null!;

@@ -10,6 +10,14 @@ builder.Services.AddPersistence(builder.Configuration);
 builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddIdentityAndJwt(builder.Configuration);
 
+// Controladores protegidos por defecto
+//builder.Services.AddControllers(options =>
+//{
+//    var policy = new AuthorizationPolicyBuilder()
+//        .RequireAuthenticatedUser() 
+//        .Build();
+//    options.Filters.Add(new AuthorizeFilter(policy)); 
+//});
 
 // Add services to the container.
 
