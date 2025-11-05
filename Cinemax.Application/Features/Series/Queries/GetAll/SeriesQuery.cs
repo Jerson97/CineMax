@@ -12,7 +12,6 @@ namespace Cinemax.Application.Features.Series.Queries.GetAll
     {
         public class SeriesQueryRequest : IRequest<MessageResult<DataCollection<SeriesDto>>>
         {
-            public string? Search { get; set; }
             public int Page { get; set; } 
             public int Amount { get; set; }
         }

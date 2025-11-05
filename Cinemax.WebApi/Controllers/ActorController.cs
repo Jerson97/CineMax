@@ -1,7 +1,6 @@
 ﻿using Cinemax.Application.Common;
 using Cinemax.Application.DTOs;
 using CineMax.Domain.Result;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static Cinemax.Application.Features.Actors.Command.Create.ActorCreate;
 using static Cinemax.Application.Features.Actors.Command.Update.ActorUpdate;

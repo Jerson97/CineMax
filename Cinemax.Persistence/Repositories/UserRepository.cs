@@ -1,7 +1,5 @@
 ﻿using System.Net;
-using Azure;
 using Cinemax.Application.DTOs;
-using Cinemax.Application.Features.Auth.Command;
 using Cinemax.Application.Interfaces;
 using Cinemax.Application.Interfaces.Token;
 using CineMax.Domain.Entities;

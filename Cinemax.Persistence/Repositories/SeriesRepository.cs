@@ -148,8 +148,6 @@ namespace Cinemax.Persistence.Repositories
         {
             try
             {
-                var search = request.Search?.Trim().ToLower();
-
                 var page = Math.Max(1, request.Page);
                 var pageSize = request.Amount <= 0 ? 5
                                : request.Amount > 50 ? 50
@@ -158,8 +156,7 @@ namespace Cinemax.Persistence.Repositories
                 var skip = (page - 1) * pageSize;
 
                 var query = _context.Series
-                    .AsNoTracking()
-                    .Where(string.IsNullOrEmpty(search) ? x => true : x => x.Title!.ToLower().Contains(search));
+                    .AsNoTracking();
 
                 var total = await query.CountAsync(cancellationToken);
 
@@ -202,14 +199,14 @@ namespace Cinemax.Persistence.Repositories
                     }
                     catch (Azure.RequestFailedException ex)
                     {
-                        // Errores específicos de Azure Storage
-                        Console.WriteLine($"❌ Error de Azure Storage: {ex.Message}");
+                        // Errores de Azure Storage
+                        Console.WriteLine($"Error de Azure Storage: {ex.Message}");
                         return (ServiceStatus.Error, null, "No se pudo conectar al servicio de Azure Storage. Verifique la cadena de conexión o la disponibilidad del servicio.");
                     }
                     catch (Exception ex)
                     {
                         // Otros errores (red, permisos, etc.)
-                        Console.WriteLine($"⚠️ Error inesperado al subir imagen: {ex.Message}");
+                        Console.WriteLine($"Error inesperado al subir imagen: {ex.Message}");
                         return (ServiceStatus.Error, null, "Error inesperado al subir la imagen. Inténtelo nuevamente.");
                     }
                 }
@@ -300,13 +297,13 @@ namespace Cinemax.Persistence.Repositories
                     catch (Azure.RequestFailedException ex)
                     {
                         // Errores específicos de Azure Storage
-                        Console.WriteLine($"❌ Error de Azure Storage: {ex.Message}");
+                        Console.WriteLine($"Error de Azure Storage: {ex.Message}");
                         return (ServiceStatus.Error, null, "No se pudo conectar al servicio de Azure Storage. Verifique la cadena de conexión o la disponibilidad del servicio.");
                     }
                     catch (Exception ex)
                     {
                         // Otros errores (red, permisos, etc.)
-                        Console.WriteLine($"⚠️ Error inesperado al subir imagen: {ex.Message}");
+                        Console.WriteLine($"Error inesperado al subir imagen: {ex.Message}");
                         return (ServiceStatus.Error, null, "Error inesperado al subir la imagen. Inténtelo nuevamente.");
                     }
                 }
