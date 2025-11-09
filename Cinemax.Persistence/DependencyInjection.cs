@@ -26,6 +26,7 @@ namespace Cinemax.Persistence
             services.AddScoped<ISeasonRepository, SeasonRepository>();
             services.AddScoped<IEpisodeRepository, EpisodeRepository>();
             services.AddScoped<ISearchRepository, SearchRepository>();
+            services.AddScoped<IFavoriteRepository, FavoriteRepository>();
             services.AddScoped<IUserRepository,  UserRepository>();
 
 

@@ -20,6 +20,7 @@ namespace Cinemax.Application.Interfaces
         DbSet<SeriesDirector> SeriesDirectors { get; set; }
         DbSet<Season> Seasons { get; set; }
         DbSet<Episode> Episodes { get; set; }
+        DbSet<User> Users { get; set; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
