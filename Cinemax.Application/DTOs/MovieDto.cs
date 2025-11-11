@@ -6,6 +6,7 @@
         public string? Title { get; set; }
         public DateTime ReleaseDate { get; set; }
         public int Duration { get; set; }
+        public string? Type { get; set; } = "movie";
         public string? ImageUrl { get; set; }
     }
 }

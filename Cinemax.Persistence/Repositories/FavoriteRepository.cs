@@ -6,6 +6,7 @@ using CineMax.Domain.Entities;
 using CineMax.Domain.Enum;
 using Microsoft.EntityFrameworkCore;
 using static Cinemax.Application.Features.Favorites.Command.Create.FavoriteCreate;
+using static Cinemax.Application.Features.Favorites.Command.Delete.FavoriteDelete;
 
 namespace Cinemax.Persistence.Repositories
 {
@@ -18,6 +19,38 @@ namespace Cinemax.Persistence.Repositories
         {
             _context = context;
             _mapper = mapper;
+        }
+
+        public async Task<(ServiceStatus, int?, string)> DeleteFavorite(FavoriteDeleteRequest request, CancellationToken cancellationToken)
+        {
+            try
+            {
+                // Validar que el usuario exista
+                var userExists = await _context.Users.AnyAsync(u => u.Id == request.UserId, cancellationToken);
+                if (!userExists)
+                {
+                    return (ServiceStatus.NotFound, null, "El usuario no existe.");
+                }
+
+                var favorites =  await _context.Favorites
+                     .FindAsync(request.Id);
+
+                if (favorites == null)
+                {
+                    return (ServiceStatus.NotFound, null, "No se encontraron favoritos.");
+                }
+
+                _context.Favorites.Remove(favorites);
+
+                await _context.SaveChangesAsync(cancellationToken);
+
+                return (ServiceStatus.Ok, 0, "Eliminado de favoritos correctamente.");
+
+            }
+            catch (Exception ex)
+            {
+                return (ServiceStatus.InternalError, null, $"Error interno: {ex.Message}");
+            }
         }
 
         public async Task<(ServiceStatus, DataCollection<FavoriteDto>?, string)>GetAllFavorites(int userId, CancellationToken cancellationToken)
@@ -36,7 +69,7 @@ namespace Cinemax.Persistence.Repositories
                 var result = favorites.Select(f => new FavoriteDto
                 {
                     Id = f.Id,
-                    Title = f.Movie != null ? f.Movie.Title : f.Series!.Title,
+                    Title = f.Movie != null ? f.Movie.Title! : f.Series!.Title!,
                     Type = f.Movie != null ? "movie" : "series",
                     ImageUrl = f.Movie != null ? f.Movie.ImageUrl : f.Series!.ImageUrl
                 }).ToList();

@@ -4,6 +4,7 @@ using CineMax.Domain.Result;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static Cinemax.Application.Features.Favorites.Command.Create.FavoriteCreate;
+using static Cinemax.Application.Features.Favorites.Command.Delete.FavoriteDelete;
 using static Cinemax.Application.Features.Favorites.Queries.GetAll.FavoriteGetAll;
 
 namespace Cinemax.WebApi.Controllers
@@ -26,6 +27,14 @@ namespace Cinemax.WebApi.Controllers
         [ProducesResponseType(typeof(MessageResult<int>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(MessageResult<int>), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<MessageResult<int>>> Create([FromBody] FavoriteCreateRequest request)
+        {
+            return await Mediator.Send(request);
+        }
+
+        [HttpDelete]
+        [ProducesResponseType(typeof(MessageResult<int>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(MessageResult<int>), StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<MessageResult<int>>> Delete([FromBody] FavoriteDeleteRequest request)
         {
             return await Mediator.Send(request);
         }
