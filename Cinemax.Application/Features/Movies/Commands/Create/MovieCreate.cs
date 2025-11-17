@@ -19,6 +19,7 @@ namespace Cinemax.Application.Features.Movies.Commands.Create
             public List<int> DirectorIds { get; set; } = new();
             public List<int> ActorIds { get; set; } = new();
             public IFormFile? Image { get; set; }
+            public string? TrailerUrl { get; set; }
             public int Duration { get; set; }
 
         }

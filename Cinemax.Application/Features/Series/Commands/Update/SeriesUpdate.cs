@@ -22,6 +22,7 @@ namespace Cinemax.Application.Features.Series.Commands.Update
             public List<int> DirectorIds { get; set; } = new();
             public List<int> ActorIds { get; set; } = new();
             public IFormFile? Image { get; set; }
+            public string? TrailerUrl { get; set; }
         }
 
         public class Manejador : IRequestHandler<SeriesUpdateRequest, MessageResult<int>>

@@ -8,6 +8,7 @@
         public DateTime ReleaseDate { get; set; }
         public int Duration { get; set; }
         public string? ImageUrl { get; set; }
+        public string? TrailerUrl { get; set; }
 
         public List<CategoryDto>? CategoryList { get; set; }
         public List<ActorDto>? ActorList { get; set; }

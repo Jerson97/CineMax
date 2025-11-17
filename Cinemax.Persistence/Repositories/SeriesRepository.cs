@@ -161,7 +161,7 @@ namespace Cinemax.Persistence.Repositories
                 var total = await query.CountAsync(cancellationToken);
 
                 var series = await query
-                    .OrderBy(x => x.Title)
+                    .OrderBy(x => x.Id)
                     .Skip(skip)
                     .Take(pageSize)
                     .ToListAsync(cancellationToken);
@@ -311,6 +311,7 @@ namespace Cinemax.Persistence.Repositories
                 serie.Title = request.Title ?? serie.Title;
                 serie.Description = request.Description ?? serie.Description;
                 serie.ReleaseDate = request.ReleaseDate != default ? request.ReleaseDate : serie.ReleaseDate;
+                serie.TrailerUrl = request.TrailerUrl ?? serie.TrailerUrl;
 
                 if (imageUrl != null)
                 {
